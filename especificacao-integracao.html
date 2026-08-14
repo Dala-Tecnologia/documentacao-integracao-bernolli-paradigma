@@ -381,7 +381,6 @@ footer p{font-size:12.5px;color:var(--muted);}
     <div class="fact"><dt>Gerente do projeto</dt><dd>Moises Mauricio Rodrigues Souza</dd></div>
     <div class="fact"><dt>Plataforma destino</dt><dd>Paradigma SRM 360</dd></div>
     <div class="fact"><dt>ERP</dt><dd>TOTVS RM — Gestão de Estoque, Compras e Faturamento</dd></div>
-    <div class="fact"><dt>Documento base</dt><dd>BBP Onda Única v1.1, 05/08/2026</dd></div>
   </dl>
 </header>
 
@@ -416,36 +415,13 @@ footer p{font-size:12.5px;color:var(--muted);}
   <h2><span class="sn">01</span><span>Objetivo e contexto</span></h2>
   <div class="rule"></div>
 
-  <p class="lead">Este documento define, em nível técnico, todas as integrações entre a plataforma Paradigma SRM 360 e o ERP TOTVS RM da Bernoulli Educação, atendendo ao compromisso registrado no BBP Onda Única.</p>
-
-  <p>O BBP aprovado declara: <em>“Serão enviados posteriormente pela Paradigma os documentos de escopo de integração de negócio e especificação técnica de integração para aprovação do cliente.”</em> Este é esse documento.</p>
+  <p class="lead">Este documento define, em nível técnico, todas as integrações entre a plataforma Paradigma SRM 360 e o ERP TOTVS RM da Bernoulli Educação.</p>
 
   <p>Seu propósito é servir como <strong>contrato técnico entre as partes</strong>: o que cada sistema envia, o que recebe, em que momento, por qual método, e qual o comportamento esperado em cada cenário — inclusive nos de exceção. A aprovação pela Bernoulli é pré-requisito para o início do desenvolvimento.</p>
 
-  <h3>Relação com a integração anterior</h3>
+  <h3>Escopo</h3>
 
-  <p>A Bernoulli já opera uma integração Paradigma × TOTVS RM, especificada em <strong>MIT041</strong> e <strong>Anexo I FS008358</strong> (2020, projeto D000016089001). As duas integrações não são equivalentes:</p>
-
-  <div class="tw">
-    <table>
-      <caption>Comparação — integração 2020 e integração SRM 360</caption>
-      <thead><tr><th>Aspecto</th><th>Integração 2020 (FS008358)</th><th>Integração SRM 360</th></tr></thead>
-      <tbody>
-        <tr><td>Protocolo</td><td>SOAP / WCF (<code>Paradigma.Wbc.Servico.DTO</code>)</td><td>REST — <code>/api/v1.0/…</code></td></tr>
-        <tr><td>Métodos</td><td>3 métodos SOAP</td><td>~30 endpoints REST</td></tr>
-        <tr><td>Escopo</td><td>Retorno de ordem de compra (Catálogo, Leilão, Contrato)</td><td>Cadastros bidirecionais, requisições, contratos, pedidos de 6 origens, títulos e notas fiscais</td></tr>
-        <tr><td>Origem do pedido</td><td>Campo <code>nIdTipoOrigem</code> (46 / 1 / 12)</td><td>Seis origens, com regras próprias</td></tr>
-        <tr><td>Aprovação da OC</td><td>No portal, <em>após</em> a integração</td><td>No portal, <em>antes</em> da integração</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p><strong>Este documento é uma reescrita, não uma atualização.</strong> Os documentos de 2020 são referenciados apenas onde o mapeamento para as tabelas do RM permanece válido — o modelo de dados do ERP não mudou, apenas o transporte e o escopo funcional.</p>
-
-  <div class="note pend">
-    <span class="tag">Pendência P-01</span>
-    <p>Definir a estratégia de transição: descontinuação da integração SOAP legada, período de coexistência (se houver) e tratamento dos documentos em trânsito no momento do corte.</p>
-  </div>
+  <p>A integração cobre os <strong>cadastros mestres</strong> em ambos os sentidos e os <strong>fluxos transacionais</strong> completos: requisições, contratos com ciclo de vida integral, pedidos de compra de seis origens, títulos financeiros e notas fiscais — sobre uma API REST em <code>/api/v1.0/…</code>, com aproximadamente 30 endpoints.</p>
 
   <h3>Fora de escopo</h3>
   <p>Módulos que operam integralmente dentro da plataforma, <strong>sem qualquer integração com o ERP</strong>: Avaliação de Fornecedores, BI / Power BI, Exportador de Dados, Comprador Virtual PIPO, Dashboard de Movimentações, Assistente Virtual e ANA mobile.</p>
@@ -541,12 +517,12 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 
   <div class="note pend">
-    <span class="tag">Pendência P-02</span>
-    <p>Definir o responsável técnico pela camada de integração do lado RM — customização TOTVS dentro do módulo Gestão de Estoque, Compras e Faturamento (modelo adotado em 2020, com processos e JOB Server) ou middleware próprio da Bernoulli. Este documento adota a redação neutra do BBP (“o integrador”), sem prejuízo de nenhuma das duas opções.</p>
+    <span class="tag">Pendência P-01</span>
+    <p>Definir o responsável técnico pela camada de integração do lado RM — customização TOTVS dentro do módulo Gestão de Estoque, Compras e Faturamento (com processos e JOB Server) ou middleware próprio da Bernoulli. Este documento adota a redação neutra “o integrador”, sem prejuízo de nenhuma das duas opções.</p>
   </div>
 
   <div class="note pend">
-    <span class="tag">Pendência P-03</span>
+    <span class="tag">Pendência P-02</span>
     <p>URLs base de homologação e produção, método de autenticação, política de expiração e renovação de credencial, e existência de <em>rate limit</em> ou paginação nos endpoints de fila.</p>
   </div>
 </section>
@@ -558,7 +534,7 @@ footer p{font-size:12.5px;color:var(--muted);}
 
   <h3>Premissas</h3>
   <ol>
-    <li>O <strong>BBP Onda Única v1.1</strong> está aprovado pelas partes e é a fonte funcional deste documento. Divergências se resolvem em favor do BBP, com registro de nova versão aqui.</li>
+    <li>O escopo funcional do projeto está aprovado pelas partes. Divergências identificadas durante o desenvolvimento serão tratadas com registro de nova versão deste documento.</li>
     <li>Os cadastros de fornecedores existentes no RM estão <strong>saneados e aptos</strong> a interagir nos processos de compra antes da carga inicial.</li>
     <li>O ERP é a <strong>fonte da verdade</strong> dos dados mestres. Alterações feitas diretamente no portal em entidades de domínio do ERP serão sobrescritas na próxima sincronização.</li>
     <li>A plataforma <strong>não trabalha com exclusão de cadastros básicos</strong>. Registros integrados são inativados, nunca excluídos.</li>
@@ -572,7 +548,7 @@ footer p{font-size:12.5px;color:var(--muted);}
     <li>Não está contemplado o desenvolvimento ou alteração de relatórios.</li>
     <li>Não estão contempladas funcionalidades não explicitadas neste documento; solicitações adicionais serão tratadas mediante nova proposta.</li>
     <li>Não está contemplada a migração de documentos históricos do portal legado para o SRM 360, salvo definição em contrário.</li>
-    <li>Os campos de rastreabilidade identificados como incompatíveis no Anexo I de 2020 permanecem sem correspondente direto e são tratados caso a caso — ver <strong>P-10</strong>.</li>
+    <li>Os campos de rastreabilidade cuja estrutura é incompatível entre os dois sistemas permanecem sem correspondente direto e são tratados caso a caso — ver <strong>P-09</strong>.</li>
     <li>Alterações posteriores nos contratos de API do SRM 360 que impactem a camada de integração serão tratadas como item fora de escopo.</li>
   </ol>
 </section>
@@ -582,7 +558,7 @@ footer p{font-size:12.5px;color:var(--muted);}
   <h2><span class="sn">04</span><span>Matriz de integrações</span></h2>
   <div class="rule"></div>
 
-  <p>Consolidação de todos os pontos de integração previstos no BBP. <span class="dir e">ERP → SRM</span> indica envio; <span class="dir s">SRM → ERP</span> indica consumo de fila.</p>
+  <p>Consolidação de todos os pontos de integração previstos no projeto. <span class="dir e">ERP → SRM</span> indica envio; <span class="dir s">SRM → ERP</span> indica consumo de fila.</p>
 
   <div class="tw">
     <table>
@@ -635,7 +611,7 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 
   <div class="note pend">
-    <span class="tag">Pendência P-04</span>
+    <span class="tag">Pendência P-03</span>
     <p>As periodicidades acima são <strong>sugestões</strong> baseadas na criticidade de cada fluxo. Devem ser validadas pela Bernoulli contra a volumetria real e a janela operacional disponível.</p>
   </div>
 </section>
@@ -666,7 +642,7 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 
   <h3>Regra de resolução em coligada</h3>
-  <p>Regra validada na integração de 2020 e mantida integralmente:</p>
+  <p>Regra de resolução aplicada a todo campo com identificação de coligada:</p>
   <div class="note">
     <p>Para todo campo que o portal enviar com identificação de coligada — cliente, produto, filial, centro de custo e demais — a identificação no TOTVS ocorre <strong>primeiro na coligada retornada</strong> e, caso não encontrada, verifica-se a existência na <strong>coligada global (0)</strong>.</p>
   </div>
@@ -686,7 +662,7 @@ footer p{font-size:12.5px;color:var(--muted);}
     <p>Não localizando a referência, o documento <strong>não é integrado</strong> e um log é gravado. Não há integração parcial — ver seção 14.</p>
   </div>
 
-  <p>Os parâmetros de negócio são gravados <strong>por coligada</strong>, em tabela própria da camada de integração, seguindo o padrão do Req. 01 da especificação de 2020.</p>
+  <p>Os parâmetros de negócio são gravados <strong>por coligada</strong>, em tabela própria da camada de integração.</p>
 </section>
 
 <!-- ============ 6 ============ -->
@@ -701,10 +677,10 @@ footer p{font-size:12.5px;color:var(--muted);}
   <p>Seguindo o modelo já implantado, a carga inicial deve oferecer três opções: sincronizar todos os registros ativos; sincronizar somente os não enviados em carga anterior; ou selecionar manualmente os registros a enviar.</p>
 
   <h3>Regra de concatenação</h3>
-  <p>O BBP determina que <strong>Empresas</strong>, <strong>Centros de custo</strong>, <strong>Contas contábeis</strong> e <strong>Projetos</strong> sejam enviados com “código + descrição” concatenados no campo identificador.</p>
+  <p><strong>Empresas</strong>, <strong>Centros de custo</strong>, <strong>Contas contábeis</strong> e <strong>Projetos</strong> devem ser enviados com “código + descrição” concatenados no campo identificador.</p>
 
   <div class="note pend">
-    <span class="tag">Pendência P-05</span>
+    <span class="tag">Pendência P-04</span>
     <p>Definir o separador e o formato exato da concatenação (ex.: <code>001 - ADMINISTRATIVO</code>), e o comportamento quando a descrição é alterada no ERP — se o identificador muda, quebrando o de/para, ou se o código isolado permanece como chave.</p>
   </div>
 
@@ -773,7 +749,7 @@ footer p{font-size:12.5px;color:var(--muted);}
   <p>O endpoint <code>Empresas/SemDePara</code> retorna empresas recém-cadastradas no portal ainda sem correspondência no ERP. Serve como mecanismo de conciliação, evitando duplicidade de fornecedor no RM.</p>
 
   <div class="note pend">
-    <span class="tag">Pendência P-06</span>
+    <span class="tag">Pendência P-05</span>
     <p>Definir a lista de campos retornados no fluxo de fornecedor homologado e quais deles são suficientes para criar um cadastro válido no RM sem intervenção manual.</p>
   </div>
 </section>
@@ -806,7 +782,7 @@ footer p{font-size:12.5px;color:var(--muted);}
   <p>Fluxo específico da Bernoulli. A SC de regularização segue o mesmo caminho de aprovação e envio. No portal, o comprador realiza a regularização <strong>representando o fornecedor na cotação</strong>, resultando em um pedido do tipo regularização. O integrador consome o pedido, faz o input no ERP e <strong>devolve diretamente com a situação “Recebido total”</strong> — pulando as situações intermediárias, pois a entrega já ocorreu.</p>
 
   <div class="note pend">
-    <span class="tag">Pendência P-07</span>
+    <span class="tag">Pendência P-06</span>
     <p>Confirmar se o pedido de regularização traz marcação própria no payload que permita identificá-lo automaticamente, ou se a identificação depende do tipo da SC de origem.</p>
   </div>
 </section>
@@ -1065,7 +1041,7 @@ footer p{font-size:12.5px;color:var(--muted);}
   <p>O módulo prevê a conciliação de <strong>antecipações de pagamento</strong> com o posterior lançamento de notas fiscais e o vínculo com o pedido no título financeiro.</p>
 
   <div class="note pend">
-    <span class="tag">Pendência P-08</span>
+    <span class="tag">Pendência P-07</span>
     <p>Definir o conjunto de situações de título a publicar e o campo de vínculo entre o título e o pedido do portal.</p>
   </div>
 
@@ -1079,17 +1055,17 @@ footer p{font-size:12.5px;color:var(--muted);}
   <h2><span class="sn">13</span><span>Mapeamento de campos</span></h2>
   <div class="rule"></div>
 
-  <p>O mapeamento parte do <strong>mapeamento validado pelo time de serviços na especificação de 2020</strong> (Anexo I FS008358), que permanece aplicável porque o modelo de dados do TOTVS RM não mudou. O que mudou foi o transporte e o escopo funcional.</p>
+  <p>O mapeamento relaciona os elementos do documento no portal às tabelas e colunas correspondentes do TOTVS RM.</p>
 
   <div class="note warn">
     <span class="tag">Regra editorial</span>
-    <p>Campos cujo nome no contrato REST do SRM 360 ainda não foi publicado estão marcados como <strong>A DEFINIR</strong>. <strong>Nenhum nome de campo foi inferido ou inventado.</strong> O preenchimento dessas lacunas depende da entrega da documentação de API pela Paradigma — pendência <strong>P-09</strong>.</p>
+    <p>Campos cujo nome no contrato REST do SRM 360 ainda não foi publicado estão marcados como <strong>A DEFINIR</strong>. <strong>Nenhum nome de campo foi inferido ou inventado.</strong> O preenchimento dessas lacunas depende da entrega da documentação de API pela Paradigma — pendência <strong>P-08</strong>.</p>
   </div>
 
   <div class="tw">
     <table>
       <caption>13.1 — Pedido, capa</caption>
-      <thead><tr><th>Elemento (ref. 2020)</th><th>Tipo</th><th>Descrição</th><th>Tabela RM</th><th>Coluna RM</th></tr></thead>
+      <thead><tr><th>Elemento</th><th>Tipo</th><th>Descrição</th><th>Tabela RM</th><th>Coluna RM</th></tr></thead>
       <tbody>
         <tr><td><code>sCdPedidoWbc</code></td><td>String 20</td><td>Cód. da negociação que gerou o pedido</td><td>TMOVCOMPL</td><td>PEDIDOWBC</td></tr>
         <tr><td><code>nIdTipoOrigem</code></td><td>Int</td><td>Tipo / origem da negociação</td><td>—</td><td>Define o tipo de movimento</td></tr>
@@ -1119,7 +1095,7 @@ footer p{font-size:12.5px;color:var(--muted);}
   <div class="tw">
     <table>
       <caption>13.2 — Pedido, itens</caption>
-      <thead><tr><th>Elemento (ref. 2020)</th><th>Descrição</th><th>Tabela RM</th><th>Coluna RM</th></tr></thead>
+      <thead><tr><th>Elemento</th><th>Descrição</th><th>Tabela RM</th><th>Coluna RM</th></tr></thead>
       <tbody>
         <tr><td><code>sCdProduto</code></td><td>Produto</td><td>TITMMOV / TPRODUTO</td><td>CODCOLIGADA | CODIGOPRD</td></tr>
         <tr><td><code>sDsItem</code></td><td>Descrição do item</td><td>TPRODUTO</td><td>NOMEFANTASIA</td></tr>
@@ -1139,14 +1115,14 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 
   <div class="note warn">
-    <span class="tag">Ponto de atenção crítico — P-10</span>
-    <p>A incompatibilidade de rastreabilidade item a item foi aceita em 2020 porque o escopo era menor. No escopo atual — com recebimento parcial <em>por item</em>, medição de contrato e reconfiguração de item — <strong>a ausência de vínculo item-a-item entre portal e ERP pode inviabilizar a atualização de situação por item</strong>, exigida na seção 11. Este ponto precisa ser reavaliado tecnicamente antes do desenvolvimento.</p>
+    <span class="tag">Ponto de atenção crítico — P-09</span>
+    <p>No escopo deste projeto — com recebimento parcial <em>por item</em>, medição de contrato e reconfiguração de item — <strong>a ausência de vínculo item-a-item entre portal e ERP pode inviabilizar a atualização de situação por item</strong>, exigida na seção 11. Este ponto precisa ser reavaliado tecnicamente antes do desenvolvimento.</p>
   </div>
 
   <div class="tw">
     <table>
       <caption>13.3 — Taxas e entregas</caption>
-      <thead><tr><th>Elemento (ref. 2020)</th><th>Descrição</th><th>Tabela RM</th><th>Coluna RM</th></tr></thead>
+      <thead><tr><th>Elemento</th><th>Descrição</th><th>Tabela RM</th><th>Coluna RM</th></tr></thead>
       <tbody>
         <tr><td><code>nCdTaxa</code></td><td>Código da taxa</td><td>TTRBMOV</td><td>de/para com CODTRB</td></tr>
         <tr><td><code>bFlIncluso</code></td><td>Taxa inclusa no valor da proposta</td><td>TTRBMOV</td><td>Fixo 1</td></tr>
@@ -1249,20 +1225,19 @@ footer p{font-size:12.5px;color:var(--muted);}
     <table>
       <thead><tr><th>#</th><th>Pendência</th><th>Responsável</th><th>Bloqueia</th></tr></thead>
       <tbody>
-        <tr><td class="id">P-01</td><td>Estratégia de transição da integração SOAP legada: descontinuação, coexistência e documentos em trânsito no corte</td><td>Bernoulli + Paradigma</td><td>Planejamento do go-live</td></tr>
-        <tr><td class="id">P-02</td><td>Responsável técnico pela camada de integração do lado RM</td><td>Bernoulli</td><td>Início do desenvolvimento</td></tr>
-        <tr><td class="id">P-03</td><td>URLs dos ambientes, autenticação, política de credencial, rate limit e paginação</td><td>Paradigma</td><td>Desenvolvimento</td></tr>
-        <tr><td class="id">P-04</td><td>Validação das periodicidades sugeridas contra volumetria real e janela operacional</td><td>Bernoulli</td><td>Configuração</td></tr>
-        <tr><td class="id">P-05</td><td>Formato exato da concatenação “código + descrição” e comportamento na alteração da descrição</td><td>Paradigma</td><td>Cadastros</td></tr>
-        <tr><td class="id">P-06</td><td>Campos retornados no fluxo de fornecedor homologado e suficiência para criar cadastro no RM</td><td>Paradigma + Bernoulli</td><td>Seção 07</td></tr>
-        <tr><td class="id">P-07</td><td>Identificação automática do pedido do tipo “regularização” no payload</td><td>Paradigma</td><td>Seção 08</td></tr>
-        <tr><td class="id">P-08</td><td>Situações de título financeiro a publicar e campo de vínculo título ↔ pedido</td><td>Bernoulli + Paradigma</td><td>Seção 12</td></tr>
-        <tr><td class="id">P-09</td><td><strong>Entrega da documentação de contratos da API REST</strong> (payloads de request e response de todos os endpoints)</td><td>Paradigma</td><td><strong>Seção 13</strong></td></tr>
-        <tr><td class="id">P-10</td><td><strong>Rastreabilidade item a item</strong> entre portal e ERP — reavaliação da incompatibilidade aceita em 2020 diante do recebimento parcial por item, medição e reconfiguração</td><td>Paradigma + Bernoulli</td><td><strong>Seção 11</strong></td></tr>
-        <tr><td class="id">P-11</td><td>Tabela de de/para de situações de pedido entre portal e RM</td><td>Bernoulli</td><td>Seção 11</td></tr>
-        <tr><td class="id">P-12</td><td>Confirmação da versão do TOTVS RM em produção</td><td>Bernoulli</td><td>Desenvolvimento</td></tr>
-        <tr><td class="id">P-13</td><td>Lista de usuários e de condições de pagamento a integrar (carga inicial seletiva)</td><td>Bernoulli</td><td>Cadastros</td></tr>
-        <tr><td class="id">P-14</td><td>Volumetria estimada por entidade, para dimensionamento</td><td>Bernoulli</td><td>Configuração</td></tr>
+        <tr><td class="id">P-01</td><td>Responsável técnico pela camada de integração do lado RM</td><td>Bernoulli</td><td>Início do desenvolvimento</td></tr>
+        <tr><td class="id">P-02</td><td>URLs dos ambientes, autenticação, política de credencial, rate limit e paginação</td><td>Paradigma</td><td>Desenvolvimento</td></tr>
+        <tr><td class="id">P-03</td><td>Validação das periodicidades sugeridas contra volumetria real e janela operacional</td><td>Bernoulli</td><td>Configuração</td></tr>
+        <tr><td class="id">P-04</td><td>Formato exato da concatenação “código + descrição” e comportamento na alteração da descrição</td><td>Paradigma</td><td>Cadastros</td></tr>
+        <tr><td class="id">P-05</td><td>Campos retornados no fluxo de fornecedor homologado e suficiência para criar cadastro no RM</td><td>Paradigma + Bernoulli</td><td>Seção 07</td></tr>
+        <tr><td class="id">P-06</td><td>Identificação automática do pedido do tipo “regularização” no payload</td><td>Paradigma</td><td>Seção 08</td></tr>
+        <tr><td class="id">P-07</td><td>Situações de título financeiro a publicar e campo de vínculo título ↔ pedido</td><td>Bernoulli + Paradigma</td><td>Seção 12</td></tr>
+        <tr><td class="id">P-08</td><td><strong>Entrega da documentação de contratos da API REST</strong> (payloads de request e response de todos os endpoints)</td><td>Paradigma</td><td><strong>Seção 13</strong></td></tr>
+        <tr><td class="id">P-09</td><td><strong>Rastreabilidade item a item</strong> entre portal e ERP, diante do recebimento parcial por item, medição e reconfiguração</td><td>Paradigma + Bernoulli</td><td><strong>Seção 11</strong></td></tr>
+        <tr><td class="id">P-10</td><td>Tabela de de/para de situações de pedido entre portal e RM</td><td>Bernoulli</td><td>Seção 11</td></tr>
+        <tr><td class="id">P-11</td><td>Confirmação da versão do TOTVS RM em produção</td><td>Bernoulli</td><td>Desenvolvimento</td></tr>
+        <tr><td class="id">P-12</td><td>Lista de usuários e de condições de pagamento a integrar (carga inicial seletiva)</td><td>Bernoulli</td><td>Cadastros</td></tr>
+        <tr><td class="id">P-13</td><td>Volumetria estimada por entidade, para dimensionamento</td><td>Bernoulli</td><td>Configuração</td></tr>
       </tbody>
     </table>
   </div>
@@ -1390,7 +1365,7 @@ footer p{font-size:12.5px;color:var(--muted);}
       <caption>Histórico de versões</caption>
       <thead><tr><th>Data</th><th>Autor</th><th>Versão</th><th>Alterações</th><th>Requer aprovação</th></tr></thead>
       <tbody>
-        <tr><td>13/08/2026</td><td>Paradigma Business Solutions</td><td>1.0</td><td>Documento inicial, elaborado a partir do BBP Onda Única v1.1</td><td>Sim</td></tr>
+        <tr><td>13/08/2026</td><td>Paradigma Business Solutions</td><td>1.0</td><td>Documento inicial</td><td>Sim</td></tr>
       </tbody>
     </table>
   </div>
@@ -1404,11 +1379,6 @@ footer p{font-size:12.5px;color:var(--muted);}
     <div><span class="who">Moises Mauricio Rodrigues Souza</span><br><span class="role">Gerente de Projeto — Paradigma</span></div>
     <div><span class="who">Vitor Tadeu Rosenburg Pereira</span><br><span class="role">Responsável no cliente — Bernoulli</span></div>
   </div>
-
-  <footer>
-    <h4>Referências</h4>
-    <p>BBP | Business Blue Print — SRM Bernoulli, Onda Única, v1.1, 05/08/2026, Paradigma Business Solutions</p>
-  </footer>
 </section>
 
 </main>
