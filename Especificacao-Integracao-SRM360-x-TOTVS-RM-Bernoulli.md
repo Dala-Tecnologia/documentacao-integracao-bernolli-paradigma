@@ -13,7 +13,6 @@
 | **Gerente do Projeto (Paradigma)** | Moises Mauricio Rodrigues Souza |
 | **Plataforma destino** | Paradigma SRM 360 |
 | **Sistema legado / ERP** | TOTVS RM — Gestão de Estoque, Compras e Faturamento |
-| **Documento base** | BBP — Business Blue Print, Onda Única, v1.1 de 05/08/2026 |
 | **Fase** | Especificação técnica de integração |
 | **Versão deste documento** | 1.0 |
 | **Data** | 13/08/2026 |
@@ -24,46 +23,26 @@
 
 ### 2.1. Objetivo
 
-Este documento detalha, em nível técnico, **todas as integrações entre a plataforma Paradigma SRM 360 e o ERP TOTVS RM** da Bernoulli Educação, atendendo ao compromisso registrado no item 1 do BBP:
-
-> "Serão enviados posteriormente pela Paradigma os documentos de 'escopo de integração de negócio' e 'especificação técnica de integração' para aprovação do cliente."
+Este documento detalha, em nível técnico, **todas as integrações entre a plataforma Paradigma SRM 360 e o ERP TOTVS RM** da Bernoulli Educação.
 
 Seu propósito é servir como **contrato técnico entre as partes**: define o que cada sistema envia, o que recebe, em que momento, por qual método, e qual o comportamento esperado em cada cenário — inclusive nos de exceção.
 
 A aprovação deste documento pela Bernoulli é pré-requisito para o início do desenvolvimento da camada de integração.
 
-### 2.2. Relação com a integração anterior (FS008358 / MIT041)
+### 2.2. Escopo deste documento
 
-A Bernoulli já possui uma integração Paradigma x TOTVS RM em produção, especificada nos documentos **MIT041 — Bernoulli Integração Paradigma RM** e **Especificação Anexo I — Detalhamento Funcional FS008358** (2020, projeto D000016089001).
-
-Aquela integração e a presente **não são equivalentes**, em dois aspectos determinantes:
-
-| Aspecto | Integração 2020 (FS008358) | Integração SRM 360 (este documento) |
-|---|---|---|
-| **Protocolo** | SOAP / WCF (`Paradigma.Wbc.Servico.DTO`) | REST — `/api/v1.0/...` |
-| **Métodos** | `RetornarTodosPedidosEmProcessoDeIntegracao`, `AtualizarNumeroPedidoPortal`, `RetornarPedidoCancelamento` | ~30 endpoints REST (ver §5) |
-| **Escopo** | Retorno de ordem de compra (Catálogo, Leilão, Contrato) + cadastros via fórmulas visuais | Cadastros mestres bidirecionais, requisições, contratos com ciclo de vida completo, pedidos de 6 origens, títulos financeiros e notas fiscais |
-| **Origem do pedido** | Identificada por `nIdTipoOrigem` (46=Catálogo, 1=Leilão, 12=Contratos) | Seis origens distintas, com regras de negócio próprias (ver §12) |
-| **Aprovação da OC** | No portal, após integração | No portal, antes da integração |
-
-Portanto, **este documento é uma reescrita, não uma atualização**. Os documentos de 2020 são referenciados aqui apenas onde o mapeamento de campos para as tabelas do RM (`TMOV`, `TITMMOV`, `TMOVCOMPL`, `TTRBMOV`) permanece tecnicamente válido — o modelo de dados do RM não mudou, apenas o transporte e o escopo funcional.
-
-> **Pendência P-01:** definir a estratégia de transição — descontinuação da integração SOAP legada, período de coexistência (se houver) e tratamento dos documentos em trânsito no momento do corte. Ver §17.
-
-### 2.3. Escopo deste documento
-
-**Contemplado:** todos os fluxos identificados no BBP com a marcação *"Ao integrador"*, além dos cadastros mestres do item 3 do BBP.
+**Contemplado:** todos os fluxos de integração entre a plataforma SRM 360 e o ERP, além dos cadastros mestres.
 
 **Não contemplado** (módulos que operam integralmente dentro da plataforma SRM 360, **sem qualquer integração com o ERP**):
 
-- Avaliação de Fornecedores (BBP §11 — *"Não há integração envolvida neste módulo"*)
-- BI / Power BI (BBP §13)
-- Exportador de Dados (BBP §14 — *"Não há integração envolvida neste módulo"*)
-- Comprador Virtual PIPO (BBP §15) — gera cotações e re-pedidos internamente; os **pedidos** resultantes seguem o fluxo padrão de §12
-- Dashboard de Movimentações (BBP §16)
-- Assistente Virtual (BBP §17)
-- ANA — Autorizações, Notificações e Aprovações mobile (BBP §18)
-- **Catálogos** (BBP §9) — o catálogo em si **não é integrado com o ERP**; apenas os **pedidos** gerados a partir dele são
+- Avaliação de Fornecedores
+- BI / Power BI
+- Exportador de Dados
+- Comprador Virtual PIPO — gera cotações e re-pedidos internamente; os **pedidos** resultantes seguem o fluxo padrão de §12
+- Dashboard de Movimentações
+- Assistente Virtual
+- ANA — Autorizações, Notificações e Aprovações mobile
+- **Catálogos** — o catálogo em si **não é integrado com o ERP**; apenas os **pedidos** gerados a partir dele são
 
 ---
 
@@ -110,7 +89,7 @@ Os endpoints de retorno (`GET`) operam como **filas de consumo destrutivo**: um 
 | Títulos financeiros | TOTVS RM (publicados no SRM) |
 | Execução, agendamento e log da integração | Camada de integração |
 
-> **Pendência P-02:** definir o responsável técnico pela camada de integração do lado RM — customização TOTVS dentro do módulo Gestão de Estoque, Compras e Faturamento (modelo adotado em 2020, com processos e JOB Server) ou middleware/integrador próprio da Bernoulli. Este documento adota a redação neutra do BBP ("o integrador"), sem prejuízo de nenhuma das duas opções.
+> **Pendência P-01:** definir o responsável técnico pela camada de integração do lado RM — customização TOTVS dentro do módulo Gestão de Estoque, Compras e Faturamento (com processos e JOB Server) ou middleware/integrador próprio da Bernoulli. Este documento adota a redação neutra "o integrador", sem prejuízo de nenhuma das duas opções.
 
 ### 3.4. Ambientes
 
@@ -119,7 +98,7 @@ Os endpoints de retorno (`GET`) operam como **filas de consumo destrutivo**: um 
 | Homologação | Testes integrados e aceite | *A definir* |
 | Produção | Operação | *A definir* |
 
-> **Pendência P-03:** URLs base dos ambientes, método de autenticação (token, chave de API, OAuth), política de expiração/renovação de credencial, e existência de rate limit ou paginação nos endpoints de fila. Ver §17.
+> **Pendência P-02:** URLs base dos ambientes, método de autenticação (token, chave de API, OAuth), política de expiração/renovação de credencial, e existência de rate limit ou paginação nos endpoints de fila. Ver §17.
 
 ### 3.5. Versão do ERP
 
@@ -127,7 +106,7 @@ Os endpoints de retorno (`GET`) operam como **filas de consumo destrutivo**: um 
 |---|---|
 | Sistema base | RM — TOTVS Gestão de Estoque, Compras e Faturamento |
 | Base de dados | SQL Server |
-| Versão ERP | *A confirmar* (a integração de 2020 foi entregue sobre a 12.1.27) |
+| Versão ERP | *A confirmar* |
 
 ---
 
@@ -135,8 +114,8 @@ Os endpoints de retorno (`GET`) operam como **filas de consumo destrutivo**: um 
 
 ### 4.1. Premissas
 
-1. O **BBP Onda Única v1.1** está aprovado pelas partes e é a fonte funcional deste documento. Divergências entre este documento e o BBP devem ser resolvidas em favor do BBP, com registro de nova versão aqui.
-2. Os cadastros de fornecedores existentes no RM estão **saneados e aptos** a interagir nos processos de compra antes da carga inicial (BBP §3).
+1. O escopo funcional do projeto está aprovado pelas partes. Divergências identificadas durante o desenvolvimento serão tratadas com registro de nova versão deste documento.
+2. Os cadastros de fornecedores existentes no RM estão **saneados e aptos** a interagir nos processos de compra antes da carga inicial.
 3. O ERP é a **fonte da verdade** dos dados mestres. Alterações feitas diretamente no portal em entidades de domínio do ERP serão sobrescritas na próxima sincronização.
 4. A plataforma SRM 360 **não trabalha com exclusão de cadastros básicos**. Registros integrados são inativados, nunca excluídos.
 5. O check orçamentário e a suplementação de budget ocorrem integralmente no RM; a plataforma apenas reflete o resultado.
@@ -148,14 +127,14 @@ Os endpoints de retorno (`GET`) operam como **filas de consumo destrutivo**: um 
 1. Não está contemplado o desenvolvimento ou alteração de relatórios.
 2. Não estão contempladas funcionalidades não explicitadas neste documento; solicitações adicionais serão tratadas mediante nova proposta.
 3. Não está contemplada a migração de documentos históricos (pedidos, contratos, cotações encerrados) do portal legado para o SRM 360, salvo definição em contrário.
-4. Os campos de rastreabilidade cuja estrutura é incompatível entre os dois sistemas — identificados no Anexo I de 2020 (`sCdItemWbc`, `sCdOrigemEmpresa`, `sCdItemOrigemEmpresa`, `sCdItemEmpresa`) — permanecem sem correspondente direto e serão tratados caso a caso na especificação de campos (§15).
+4. Os campos de rastreabilidade cuja estrutura é incompatível entre os dois sistemas (`sCdItemWbc`, `sCdOrigemEmpresa`, `sCdItemOrigemEmpresa`, `sCdItemEmpresa`) permanecem sem correspondente direto e serão tratados caso a caso na especificação de campos (§15).
 5. Qualquer alteração posterior nos contratos de API do SRM 360 que impacte a camada de integração será tratada como item fora de escopo.
 
 ---
 
 ## 5. Matriz de Integrações
 
-Consolidação de todos os pontos de integração previstos no BBP.
+Consolidação de todos os pontos de integração previstos no projeto.
 
 **Legenda de gatilho:** *Evento* = disparado por inclusão/alteração no sistema de origem · *Agendado* = execução periódica pelo integrador · *Manual* = acionado por usuário.
 
@@ -221,7 +200,7 @@ Consolidação de todos os pontos de integração previstos no BBP.
 | 31 | Títulos financeiros (pagamentos) | `POST /api/v1.0/Titulos` | ERP → SRM | Evento + agendado | Diária |
 | 32 | Espelho de nota fiscal | `POST /api/v1.0/NotasFiscais` | ERP → SRM | Evento (lançamento de NF) | Imediato |
 
-> **Pendência P-04:** as periodicidades acima são **sugestões** baseadas na criticidade de cada fluxo. Devem ser validadas pela Bernoulli contra a volumetria real e a janela operacional disponível. Ver §17.
+> **Pendência P-03:** as periodicidades acima são **sugestões** baseadas na criticidade de cada fluxo. Devem ser validadas pela Bernoulli contra a volumetria real e a janela operacional disponível. Ver §17.
 
 ---
 
@@ -234,7 +213,7 @@ Antes da execução de qualquer fluxo, os parâmetros abaixo devem estar configu
 | Parâmetro | Descrição | Obrigatório |
 |---|---|---|
 | URL base do ambiente | Endpoint raiz da API SRM 360 | Sim |
-| Credencial de acesso | Conforme método de autenticação definido (P-03) | Sim |
+| Credencial de acesso | Conforme método de autenticação definido (P-02) | Sim |
 | Timeout de requisição | Tempo máximo de espera por resposta | Sim |
 | Número de tentativas (retry) | Tentativas automáticas antes de marcar erro | Sim |
 | Intervalo entre tentativas | Espaçamento entre retentativas | Sim |
@@ -244,17 +223,15 @@ Antes da execução de qualquer fluxo, os parâmetros abaixo devem estar configu
 | Parâmetro | Descrição |
 |---|---|
 | Coligada padrão | Coligada de referência para os documentos integrados |
-| Regra de busca em coligada global | Comportamento herdado da integração 2020: procurar o registro na coligada informada e, não encontrando, na coligada global (0). Ver §6.3 |
+| Regra de busca em coligada global | Procurar o registro na coligada informada e, não encontrando, na coligada global (0). Ver §6.3 |
 | Tipo de movimento por origem de pedido | Tipo de movimento RM (`TTMV`) a ser criado para cada uma das seis origens de pedido (§12.1) |
-| Tipo de movimento de solicitação de compra | Movimento correspondente à SC integrada (na configuração de 2020: `1.1.02`) |
-| Tipo de movimento de ordem de compra | Movimento correspondente à OC (na configuração de 2020: `1.1.04`) |
-| Transportadora genérica | Cadastro genérico usado quando o portal não informa transportadora (BBP §3) |
+| Tipo de movimento de solicitação de compra | Movimento correspondente à SC integrada |
+| Tipo de movimento de ordem de compra | Movimento correspondente à OC |
+| Transportadora genérica | Cadastro genérico usado quando o portal não informa transportadora |
 | De/para de situações | Tabela de correspondência entre situações do portal e status do RM (§13.3) |
 | De/para de taxas | Correspondência entre `nCdTaxa` do portal e `CODTRB` do RM |
 
 ### 6.3. Regra de resolução em coligada
-
-Regra validada na integração de 2020 e mantida:
 
 > Para todo campo que o portal enviar com identificação de coligada (cliente, produto, filial, centro de custo e demais), a identificação no TOTVS ocorre **primeiro na coligada retornada** e, caso não encontrada, verifica-se a existência na **coligada global (0)**.
 
@@ -269,7 +246,7 @@ Regra validada na integração de 2020 e mantida:
 
 ### 6.4. Persistência dos parâmetros
 
-Os parâmetros de negócio são gravados **por coligada**, em tabela própria da camada de integração, seguindo o padrão adotado no Req. 01 da especificação de 2020.
+Os parâmetros de negócio são gravados **por coligada**, em tabela própria da camada de integração.
 
 ---
 
@@ -277,7 +254,7 @@ Os parâmetros de negócio são gravados **por coligada**, em tabela própria da
 
 ### 7.1. Princípio
 
-O ERP é responsável por gerenciar os dados mestres transacionados na plataforma. As informações partem do ERP e são enviadas ao SRM 360 (BBP §3). A única exceção é o cadastro de fornecedores, que possui fluxo bidirecional (§8).
+O ERP é responsável por gerenciar os dados mestres transacionados na plataforma. As informações partem do ERP e são enviadas ao SRM 360. A única exceção é o cadastro de fornecedores, que possui fluxo bidirecional (§8).
 
 ### 7.2. Modos de sincronização
 
@@ -286,7 +263,7 @@ O ERP é responsável por gerenciar os dados mestres transacionados na plataform
 | **Carga inicial** | Envio em lote de todos os registros ativos | Implantação, e após inclusão de nova entidade no escopo |
 | **Gatilho de alteração** | Envio automático a cada inclusão ou alteração no ERP | Operação corrente |
 
-Seguindo o modelo já implantado, a carga inicial deve oferecer três opções ao usuário:
+A carga inicial deve oferecer três opções ao usuário:
 
 - **Sincronizar todos os registros** — todos os registros ativos são enviados ao portal.
 - **Sincronizar somente os não enviados** — apenas os ativos ainda não enviados em carga anterior.
@@ -294,14 +271,14 @@ Seguindo o modelo já implantado, a carga inicial deve oferecer três opções a
 
 ### 7.3. Regra de concatenação
 
-O BBP determina explicitamente que as seguintes entidades sejam enviadas com **"código + descrição" concatenados** no campo identificador:
+As seguintes entidades devem ser enviadas com **"código + descrição" concatenados** no campo identificador:
 
 - Empresas (compradoras e fornecedoras)
 - Centros de custo
 - Contas contábeis
 - Projetos
 
-> **Pendência P-05:** definir o separador e o formato exato da concatenação (ex.: `001 - ADMINISTRATIVO`), e o comportamento quando a descrição é alterada no ERP — se o identificador muda (quebrando o de/para) ou se o código isolado permanece como chave. Ver §17.
+> **Pendência P-04:** definir o separador e o formato exato da concatenação (ex.: `001 - ADMINISTRATIVO`), e o comportamento quando a descrição é alterada no ERP — se o identificador muda (quebrando o de/para) ou se o código isolado permanece como chave. Ver §17.
 
 ### 7.4. Detalhamento por entidade
 
@@ -351,7 +328,7 @@ Fornecedores existentes, saneados no ERP e aptos a interagir nos processos de co
 
 ### 8.3. Origem SRM 360 → ERP
 
-Três tipos de operação ocorrem no portal (BBP §4):
+Três tipos de operação ocorrem no portal:
 
 | Operação | Descrição |
 |---|---|
@@ -370,7 +347,7 @@ Concluída a etapa pelo fornecedor, o processo entra em fila de análise cadastr
 
 ### 8.4. Fornecedores da rede Clicbusiness
 
-Compradores podem buscar fornecedores na rede Clicbusiness e adicioná-los ao portal como **convidados**. O fornecedor convidado só passa a integrar com o ERP após homologação cadastral. **Somente após ativado entre os dois sistemas** o fornecedor pode receber pedidos da negociação realizada (BBP §2).
+Compradores podem buscar fornecedores na rede Clicbusiness e adicioná-los ao portal como **convidados**. O fornecedor convidado só passa a integrar com o ERP após homologação cadastral. **Somente após ativado entre os dois sistemas** o fornecedor pode receber pedidos da negociação realizada.
 
 ### 8.5. Fornecedores sem de/para
 
@@ -384,15 +361,15 @@ Ao consumir um fornecedor ativado, o integrador deve:
 2. **Não existindo:** criar o cadastro de Cliente/Fornecedor no RM com os dados retornados.
 3. **Existindo:** atualizar os dados alterados e reativar o cadastro se estiver inativo.
 4. Registrar o de/para entre o identificador do portal e `CODCOLIGADA|CODCFO`.
-5. Sinalizar que o cadastro pode exigir **complementação manual posterior** de informações fiscais e contábeis dentro do ERP — comportamento já conhecido do processo atual da Bernoulli.
+5. Sinalizar que o cadastro pode exigir **complementação manual posterior** de informações fiscais e contábeis dentro do ERP.
 
-> **Pendência P-06:** definir a lista de campos que o portal envia no retorno de fornecedor e quais deles são suficientes para criar um cadastro válido no RM sem intervenção manual. Ver §17.
+> **Pendência P-05:** definir a lista de campos que o portal envia no retorno de fornecedor e quais deles são suficientes para criar um cadastro válido no RM sem intervenção manual. Ver §17.
 
 ---
 
 ## 9. Req. 04 — Solicitação de Compra e Requisições
 
-### 9.1. Fluxo (BBP §5)
+### 9.1. Fluxo
 
 1. A solicitação de compra é **criada no RM**.
 2. Passa pelo processo de aprovação e **check orçamentário** no RM.
@@ -418,7 +395,7 @@ Ao consumir um fornecedor ativado, o integrador deve:
 
 ### 9.4. Solicitação do tipo "Regularização"
 
-Fluxo específico da Bernoulli, com tratamento diferenciado (BBP §5):
+Fluxo específico da Bernoulli, com tratamento diferenciado:
 
 1. A SC de regularização segue o mesmo fluxo de aprovação e envio ao portal.
 2. No portal, o comprador realiza a regularização **representando o fornecedor na cotação**.
@@ -427,7 +404,7 @@ Fluxo específico da Bernoulli, com tratamento diferenciado (BBP §5):
 5. Faz o input do pedido no ERP.
 6. **Devolve o pedido diretamente com a situação "Recebido total"** — pulando as situações intermediárias, pois a mercadoria/serviço já foi entregue.
 
-> **Pendência P-07:** confirmar se o pedido de regularização traz marcação própria no payload que permita ao integrador identificá-lo automaticamente, ou se a identificação depende do tipo da SC de origem. Ver §17.
+> **Pendência P-06:** confirmar se o pedido de regularização traz marcação própria no payload que permita ao integrador identificá-lo automaticamente, ou se a identificação depende do tipo da SC de origem. Ver §17.
 
 ---
 
@@ -498,7 +475,7 @@ O tipo de consumo definido no item do contrato determina **se o pedido gerado te
 
 ## 11. Req. 06 — Catálogo
 
-**O catálogo não é integrado com o ERP** (BBP §2: *"Os catálogos não são integrados com o ERP"*).
+**O catálogo não é integrado com o ERP.**
 
 O ciclo de configuração, aprovação, vigência e consumo (loja virtual, carrinho, fechamento) ocorre integralmente na plataforma SRM 360. A integração começa apenas quando o fechamento do carrinho **gera um pedido de compra**, que segue o fluxo do §12.
 
@@ -623,7 +600,7 @@ A gestão dos pagamentos é feita integralmente no ERP. A plataforma SRM 360 pub
 - À medida que ocorrerem atualizações no título financeiro, as situações são enviadas **no mesmo sentido** (ERP → Portal).
 - O módulo prevê a conciliação de **antecipações de pagamento** com o posterior lançamento de notas fiscais e o **vínculo com o pedido** no título financeiro.
 
-> **Pendência P-08:** definir o conjunto de situações de título a serem publicadas e o campo de vínculo entre o título e o pedido do portal. Ver §17.
+> **Pendência P-07:** definir o conjunto de situações de título a serem publicadas e o campo de vínculo entre o título e o pedido do portal. Ver §17.
 
 ---
 
@@ -644,15 +621,13 @@ O módulo trabalha com o **espelho de nota fiscal**: representação simplificad
 
 ### 15.1. Nota metodológica
 
-O mapeamento abaixo parte do **mapeamento validado pelo time de serviços na especificação de 2020** (Anexo I FS008358, Req. 02), que permanece tecnicamente aplicável porque **o modelo de dados do TOTVS RM não mudou**. O que mudou foi o transporte (SOAP → REST) e, possivelmente, os nomes dos campos no payload.
+O mapeamento abaixo relaciona os elementos do documento no portal às tabelas e colunas correspondentes do TOTVS RM.
 
-> **Regra editorial deste documento:** campos cujo nome no contrato REST do SRM 360 ainda não foi publicado estão marcados como `A DEFINIR`. **Nenhum nome de campo foi inferido ou inventado.** O preenchimento dessas lacunas depende da entrega da documentação de API pela Paradigma (Pendência P-09).
+> **Regra editorial deste documento:** campos cujo nome no contrato REST do SRM 360 ainda não foi publicado estão marcados como `A DEFINIR`. **Nenhum nome de campo foi inferido ou inventado.** O preenchimento dessas lacunas depende da entrega da documentação de API pela Paradigma (Pendência P-08).
 
 ### 15.2. Pedido — Capa
 
-Referência: elementos da classe `PedidoDTO` do contrato anterior.
-
-| Elemento (ref. 2020) | Tipo | Tam. | Descrição | Tabela RM | Coluna RM |
+| Elemento | Tipo | Tam. | Descrição | Tabela RM | Coluna RM |
 |---|---|---|---|---|---|
 | `sCdPedidoWbc` | String | 20 | Cód. da negociação que gerou o pedido | TMOVCOMPL | PEDIDOWBC |
 | `nIdTipoOrigem` | Int | — | Tipo/origem da negociação | — | Define o tipo de movimento (§6.2) |
@@ -679,9 +654,7 @@ Referência: elementos da classe `PedidoDTO` do contrato anterior.
 
 ### 15.3. Pedido — Itens
 
-Referência: elementos da classe `PedidoItemDTO`.
-
-| Elemento (ref. 2020) | Tipo | Descrição | Tabela RM | Coluna RM |
+| Elemento | Tipo | Descrição | Tabela RM | Coluna RM |
 |---|---|---|---|---|
 | `sCdProduto` | String | Produto | TITMMOV / TPRODUTO | CODCOLIGADA \| CODIGOPRD |
 | `sDsItem` | String | Descrição do item do pedido | TPRODUTO | NOMEFANTASIA |
@@ -697,22 +670,22 @@ Referência: elementos da classe `PedidoItemDTO`.
 | `sCdItemOrigemEmpresa` | String | Cód. do item da requisição que gerou o item | — | **Não enviado** — idem |
 | `sCdItemEmpresa` | String | Cód. do item do pedido no ERP | — | **Não enviado** — idem |
 
-> **Ponto de atenção crítico — P-10:** a incompatibilidade de rastreabilidade item a item foi aceita em 2020 porque o escopo era menor. No escopo atual — com recebimento parcial por item, medição de contrato e reconfiguração de item — **a ausência de vínculo item-a-item entre portal e ERP pode inviabilizar a atualização correta de situação por item**, exigida em §12.2. Este ponto precisa ser reavaliado tecnicamente antes do desenvolvimento. Ver §17.
+> **Ponto de atenção crítico — P-09:** no escopo deste projeto — com recebimento parcial por item, medição de contrato e reconfiguração de item — **a ausência de vínculo item-a-item entre portal e ERP pode inviabilizar a atualização correta de situação por item**, exigida em §12.2. Este ponto precisa ser reavaliado tecnicamente antes do desenvolvimento. Ver §17.
 
 `*` `CODTTB*FAT`: código da tabela de classificação parametrizada como categoria de produto.
 
 ### 15.4. Pedido — Taxas e entregas
 
-| Classe / Elemento (ref. 2020) | Descrição | Tabela RM | Coluna RM |
+| Elemento | Descrição | Tabela RM | Coluna RM |
 |---|---|---|---|
-| `PedidoItemTaxaDTO.nCdTaxa` | Código da taxa | TTRBMOV | De/para entre códigos do portal e CODTRB |
-| `PedidoItemTaxaDTO.bFlIncluso` | Taxa inclusa no valor da proposta (0=Não, 1=Sim) | TTRBMOV | Fixo 1 |
-| `PedidoItemTaxaDTO.dPcTaxa` | Percentual da taxa | TTRBMOV | ALIQUOTA |
-| `PedidoItemEntregaDTO.dQtEntrega` | Quantidade de entrega | TITMMOV | QUANTIDADE |
-| `PedidoItemEntregaDTO.tDtEntrega` | Data de entrega | TMOV | DATAENTREGA |
-| `PedidoItemEntregaDTO.sCdEmpresaEntregaEndereco` | Empresa do endereço de entrega | TMOV | `'FI'`\|CODCOLIGADA\|CODFILIAL |
-| `PedidoItemEntregaDTO.sCdEmpresaCobrancaEndereco` | Empresa do endereço de cobrança | TMOV | `'FI'`\|CODCOLIGADA\|CODFILIAL |
-| `PedidoItemEntregaDTO.sCdEmpresaFaturamentoEndereco` | Empresa do endereço de faturamento | TMOV | `'FI'`\|CODCOLIGADA\|CODFILIAL |
+| Taxa do item — `nCdTaxa` | Código da taxa | TTRBMOV | De/para entre códigos do portal e CODTRB |
+| Taxa do item — `bFlIncluso` | Taxa inclusa no valor da proposta (0=Não, 1=Sim) | TTRBMOV | Fixo 1 |
+| Taxa do item — `dPcTaxa` | Percentual da taxa | TTRBMOV | ALIQUOTA |
+| Entrega do item — `dQtEntrega` | Quantidade de entrega | TITMMOV | QUANTIDADE |
+| Entrega do item — `tDtEntrega` | Data de entrega | TMOV | DATAENTREGA |
+| Entrega do item — `sCdEmpresaEntregaEndereco` | Empresa do endereço de entrega | TMOV | `'FI'`\|CODCOLIGADA\|CODFILIAL |
+| Entrega do item — `sCdEmpresaCobrancaEndereco` | Empresa do endereço de cobrança | TMOV | `'FI'`\|CODCOLIGADA\|CODFILIAL |
+| Entrega do item — `sCdEmpresaFaturamentoEndereco` | Empresa do endereço de faturamento | TMOV | `'FI'`\|CODCOLIGADA\|CODFILIAL |
 
 ### 15.5. De/para de situações
 
@@ -725,11 +698,11 @@ Referência: elementos da classe `PedidoItemDTO`.
 | Recebido parcial | NF parcial lançada | *A DEFINIR* |
 | Recebido total | NF total lançada | *A DEFINIR* |
 
-> **Pendência P-11:** construir a tabela de de/para de situações em conjunto com a equipe funcional da Bernoulli, considerando os status nativos de movimento do RM e os campos de controle da integração. Ver §17.
+> **Pendência P-10:** construir a tabela de de/para de situações em conjunto com a equipe funcional da Bernoulli, considerando os status nativos de movimento do RM e os campos de controle da integração. Ver §17.
 
 ### 15.6. Demais entidades
 
-O mapeamento campo a campo das demais entidades — cadastros mestres, solicitação de compra, contrato, título financeiro e nota fiscal — será detalhado **após a entrega da documentação de contratos da API REST pela Paradigma** (P-09), seguindo o mesmo formato tabular acima.
+O mapeamento campo a campo das demais entidades — cadastros mestres, solicitação de compra, contrato, título financeiro e nota fiscal — será detalhado **após a entrega da documentação de contratos da API REST pela Paradigma** (P-08), seguindo o mesmo formato tabular acima.
 
 ---
 
@@ -750,8 +723,6 @@ A plataforma disponibiliza quatro endpoints `Habilitar*`, que recolocam na fila 
 **Diretriz:** o integrador deve tratar o consumo e a gravação no ERP como uma **transação única**. Falhando a gravação, o documento deve ser reposto na fila pelo endpoint correspondente, e não descartado.
 
 ### 16.2. Regra de integralidade
-
-Regra herdada da especificação de 2020 e mantida:
 
 > **Não há integração parcial.** O documento só é incluído no ERP quando **todos** os seus campos e referências forem identificados. Caso algum produto, fornecedor, centro de custo ou demais referências não seja localizado no TOTVS (aplicada a regra de coligada de §6.3), **o documento inteiro não é integrado** e um log é gravado.
 
@@ -802,20 +773,19 @@ Consolidação de todos os pontos que **dependem de definição** antes ou duran
 
 | # | Pendência | Responsável | Bloqueia |
 |---|---|---|---|
-| **P-01** | Estratégia de transição da integração SOAP legada (FS008358): descontinuação, coexistência e tratamento de documentos em trânsito no corte | Bernoulli + Paradigma | Planejamento do go-live |
-| **P-02** | Definição do responsável técnico pela camada de integração do lado RM (customização TOTVS ou middleware próprio) | Bernoulli | Início do desenvolvimento |
-| **P-03** | URLs base dos ambientes, método de autenticação, política de credencial, rate limit e paginação | Paradigma | Desenvolvimento |
-| **P-04** | Validação das periodicidades sugeridas na matriz (§5) contra volumetria real e janela operacional | Bernoulli | Configuração |
-| **P-05** | Formato exato da concatenação "código + descrição" e comportamento na alteração da descrição | Paradigma | Cadastros |
-| **P-06** | Lista de campos retornados no fluxo de fornecedor homologado e suficiência para criar cadastro válido no RM | Paradigma + Bernoulli | Req. 03 |
-| **P-07** | Identificação automática do pedido do tipo "regularização" no payload | Paradigma | Req. 04 |
-| **P-08** | Situações de título financeiro a publicar e campo de vínculo título ↔ pedido | Bernoulli + Paradigma | Req. 08 |
-| **P-09** | **Entrega da documentação de contratos da API REST** (payloads de request/response de todos os endpoints) | Paradigma | **§15 — mapeamento de campos** |
-| **P-10** | **Rastreabilidade item a item** entre portal e ERP — reavaliação da incompatibilidade aceita em 2020 diante do recebimento parcial por item, medição e reconfiguração | Paradigma + Bernoulli | **Req. 07** |
-| **P-11** | Tabela de de/para de situações de pedido entre portal e RM | Bernoulli | Req. 07 |
-| **P-12** | Confirmação da versão do TOTVS RM em produção | Bernoulli | Desenvolvimento |
-| **P-13** | Definição da lista de usuários e de condições de pagamento a integrar (carga inicial seletiva) | Bernoulli | Cadastros |
-| **P-14** | Volumetria estimada por entidade (registros/dia) para dimensionamento | Bernoulli | Configuração |
+| **P-01** | Definição do responsável técnico pela camada de integração do lado RM (customização TOTVS ou middleware próprio) | Bernoulli | Início do desenvolvimento |
+| **P-02** | URLs base dos ambientes, método de autenticação, política de credencial, rate limit e paginação | Paradigma | Desenvolvimento |
+| **P-03** | Validação das periodicidades sugeridas na matriz (§5) contra volumetria real e janela operacional | Bernoulli | Configuração |
+| **P-04** | Formato exato da concatenação "código + descrição" e comportamento na alteração da descrição | Paradigma | Cadastros |
+| **P-05** | Lista de campos retornados no fluxo de fornecedor homologado e suficiência para criar cadastro válido no RM | Paradigma + Bernoulli | Req. 03 |
+| **P-06** | Identificação automática do pedido do tipo "regularização" no payload | Paradigma | Req. 04 |
+| **P-07** | Situações de título financeiro a publicar e campo de vínculo título ↔ pedido | Bernoulli + Paradigma | Req. 08 |
+| **P-08** | **Entrega da documentação de contratos da API REST** (payloads de request/response de todos os endpoints) | Paradigma | **§15 — mapeamento de campos** |
+| **P-09** | **Rastreabilidade item a item** entre portal e ERP, diante do recebimento parcial por item, medição e reconfiguração | Paradigma + Bernoulli | **Req. 07** |
+| **P-10** | Tabela de de/para de situações de pedido entre portal e RM | Bernoulli | Req. 07 |
+| **P-11** | Confirmação da versão do TOTVS RM em produção | Bernoulli | Desenvolvimento |
+| **P-12** | Definição da lista de usuários e de condições de pagamento a integrar (carga inicial seletiva) | Bernoulli | Cadastros |
+| **P-13** | Volumetria estimada por entidade (registros/dia) para dimensionamento | Bernoulli | Configuração |
 
 ---
 
@@ -925,7 +895,7 @@ Consolidação de todos os pontos que **dependem de definição** antes ou duran
 
 | Data | Autor | Versão | Descrição das alterações | Requer aprovação |
 |---|---|---|---|---|
-| 13/08/2026 | Paradigma Business Solutions | 1.0 | Documento inicial, elaborado a partir do BBP Onda Única v1.1 | Sim |
+| 13/08/2026 | Paradigma Business Solutions | 1.0 | Documento inicial | Sim |
 
 ---
 
@@ -948,11 +918,3 @@ Estando de pleno acordo com as informações apresentadas neste documento, as pa
 | \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ | \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ |
 | **Moises Mauricio Rodrigues Souza** | **Vitor Tadeu Rosenburg Pereira** |
 | Gerente de Projeto — Paradigma | Responsável no Cliente — Bernoulli |
-
----
-
-### Referências
-
-- **BBP | Business Blue Print — SRM Bernoulli, Onda Única**, v1.1, 05/08/2026, Paradigma Business Solutions
-- **Especificação Funcional MIT041 — Bernoulli, Integração Paradigma RM**, projeto D000016089001, 13/08/2020, TOTVS
-- **Especificação Anexo I — Detalhamento Funcional FS008358**, v5.0, 2020, TOTVS Fábrica de Software — Unidade Belo Horizonte
