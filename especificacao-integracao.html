@@ -312,6 +312,7 @@ td.id{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:no
 }
 .dir.e{background:var(--erp-soft);color:var(--erp);border-color:var(--erp);}
 .dir.s{background:var(--srm-soft);color:var(--srm);border-color:var(--srm);}
+.dir.r{background:transparent;color:var(--muted);border-color:var(--line-strong);border-style:dashed;}
 .pill{
   font-family:var(--mono);
   font-size:10px;
@@ -391,20 +392,19 @@ footer p{font-size:12.5px;color:var(--muted);}
     <li><a href="#s2"><span class="n">02</span><span>Arquitetura</span></a></li>
     <li><a href="#s3"><span class="n">03</span><span>Premissas e restrições</span></a></li>
     <li><a href="#s4"><span class="n">04</span><span>Matriz de integrações</span></a></li>
-    <li><a href="#s5"><span class="n">05</span><span>Parâmetros de configuração</span></a></li>
-    <li><a href="#s6"><span class="n">06</span><span>Cadastros mestres</span></a></li>
-    <li><a href="#s7"><span class="n">07</span><span>Homologação de fornecedores</span></a></li>
-    <li><a href="#s8"><span class="n">08</span><span>Solicitação de compra</span></a></li>
-    <li><a href="#s9"><span class="n">09</span><span>Contratos</span></a></li>
-    <li><a href="#s10"><span class="n">10</span><span>Catálogo</span></a></li>
-    <li><a href="#s11"><span class="n">11</span><span>Pedido de compra</span></a></li>
-    <li><a href="#s12"><span class="n">12</span><span>Títulos e notas fiscais</span></a></li>
-    <li><a href="#s13"><span class="n">13</span><span>Mapeamento de campos</span></a></li>
-    <li><a href="#s14"><span class="n">14</span><span>Erros e reprocessamento</span></a></li>
-    <li><a href="#s15"><span class="n">15</span><span>Pendências</span></a></li>
-    <li><a href="#s16"><span class="n">16</span><span>Plano de testes</span></a></li>
-    <li><a href="#s17"><span class="n">17</span><span>Glossário</span></a></li>
-    <li><a href="#s18"><span class="n">18</span><span>Aprovação</span></a></li>
+    <li><a href="#s5"><span class="n">05</span><span>Cadastros mestres</span></a></li>
+    <li><a href="#s6"><span class="n">06</span><span>Homologação de fornecedores</span></a></li>
+    <li><a href="#s7"><span class="n">07</span><span>Solicitação de compra</span></a></li>
+    <li><a href="#s8"><span class="n">08</span><span>Contratos</span></a></li>
+    <li><a href="#s9"><span class="n">09</span><span>Catálogo</span></a></li>
+    <li><a href="#s10"><span class="n">10</span><span>Pedido de compra</span></a></li>
+    <li><a href="#s11"><span class="n">11</span><span>Títulos e notas fiscais</span></a></li>
+    <li><a href="#s12"><span class="n">12</span><span>Mapeamento de campos</span></a></li>
+    <li><a href="#s13"><span class="n">13</span><span>Erros e reprocessamento</span></a></li>
+    <li><a href="#s14"><span class="n">14</span><span>Pendências</span></a></li>
+    <li><a href="#s15"><span class="n">15</span><span>Plano de testes</span></a></li>
+    <li><a href="#s16"><span class="n">16</span><span>Glossário</span></a></li>
+    <li><a href="#s17"><span class="n">17</span><span>Aprovação</span></a></li>
   </ol>
 </nav>
 
@@ -426,6 +426,7 @@ footer p{font-size:12.5px;color:var(--muted);}
   <h3>Fora de escopo</h3>
   <p>Módulos que operam integralmente dentro da plataforma, <strong>sem qualquer integração com o ERP</strong>: Avaliação de Fornecedores, BI / Power BI, Exportador de Dados, Comprador Virtual PIPO, Dashboard de Movimentações, Assistente Virtual e ANA mobile.</p>
   <p>O <strong>catálogo</strong> também não é integrado com o ERP — apenas os pedidos gerados a partir dele.</p>
+  <p>Ressalva sobre o <strong>Comprador Virtual PIPO</strong>: o módulo cria cotações e <em>re-pedidos</em> automaticamente dentro do portal, sem integração própria. Os <strong>pedidos resultantes</strong>, porém, são pedidos como quaisquer outros — identificados como “Re-pedido” — e seguem integralmente o fluxo da seção 10.</p>
 </section>
 
 <!-- ============ 2 ============ -->
@@ -472,20 +473,17 @@ footer p{font-size:12.5px;color:var(--muted);}
       <text x="380" y="140" text-anchor="middle" font-size="11" fill="currentColor" opacity=".7">Infraestrutura / Recursos da Azure</text>
       <text x="380" y="158" text-anchor="middle" font-size="11" fill="currentColor" opacity=".7">agendamento · log · retry</text>
 
-      <!-- ERP -> integrator -->
-      <line x1="220" y1="135" x2="264" y2="135" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+      <!-- envio: ERP -> integrator -->
+      <path d="M 220 118 L 264 118" stroke="var(--erp)" stroke-width="2" fill="none" marker-end="url(#ahE)"/>
+
+      <!-- retorno: integrator -> ERP -->
+      <path d="M 270 152 L 226 152" stroke="var(--srm)" stroke-width="2" fill="none" marker-end="url(#ahS)"/>
 
       <!-- envio: integrator -> SRM (top arc) -->
       <path d="M 490 118 L 534 118" stroke="var(--erp)" stroke-width="2" fill="none" marker-end="url(#ahE)"/>
-      <text x="512" y="60" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--erp)">envio</text>
-      <text x="512" y="76" text-anchor="middle" font-size="10.5" fill="var(--erp)">POST · PATCH</text>
-      <line x1="440" y1="88" x2="584" y2="88" stroke="var(--erp)" stroke-width="1" opacity=".35"/>
 
       <!-- retorno: SRM -> integrator -->
       <path d="M 534 152 L 490 152" stroke="var(--srm)" stroke-width="2" fill="none" marker-end="url(#ahS)"/>
-      <text x="512" y="222" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--srm)">retorno</text>
-      <text x="512" y="238" text-anchor="middle" font-size="10.5" fill="var(--srm)">GET (fila) · Habilitar*</text>
-      <line x1="440" y1="200" x2="584" y2="200" stroke="var(--srm)" stroke-width="1" opacity=".35"/>
 
       <!-- caption line -->
       <line x1="20" y1="278" x2="740" y2="278" stroke="currentColor" stroke-width="1" opacity=".2"/>
@@ -538,7 +536,7 @@ footer p{font-size:12.5px;color:var(--muted);}
     <li>O escopo funcional do projeto está aprovado pelas partes. Divergências identificadas durante o desenvolvimento serão tratadas com registro de nova versão deste documento.</li>
     <li>Os cadastros de fornecedores existentes no RM estão <strong>saneados e aptos</strong> a interagir nos processos de compra antes da carga inicial.</li>
     <li>O ERP é a <strong>fonte da verdade</strong> dos dados mestres. Alterações feitas diretamente no portal em entidades de domínio do ERP serão sobrescritas na próxima sincronização.</li>
-    <li>A plataforma <strong>não trabalha com exclusão de cadastros básicos</strong>. Registros integrados são inativados, nunca excluídos.</li>
+    <li>A plataforma <strong>não trabalha com exclusão de cadastros básicos</strong>. Registros integrados são inativados (Caso exista algum processo para inativação do cadastro), nunca excluídos.</li>
     <li>O check orçamentário e a suplementação de budget ocorrem integralmente no RM; a plataforma apenas reflete o resultado.</li>
     <li>Todo pedido é gerado no SRM 360 com número interno próprio; o número do ERP é devolvido depois e ambos coexistem para rastreabilidade.</li>
     <li>A gestão de entrega e recebimento ocorre <strong>unicamente no ERP</strong>, via lançamento de notas fiscais.</li>
@@ -559,26 +557,26 @@ footer p{font-size:12.5px;color:var(--muted);}
   <h2><span class="sn">04</span><span>Matriz de integrações</span></h2>
   <div class="rule"></div>
 
-  <p>Consolidação de todos os pontos de integração previstos no projeto. <span class="dir e">ERP → SRM</span> indica envio; <span class="dir s">SRM → ERP</span> indica consumo de fila.</p>
+  <p>Consolidação de todos os pontos de integração previstos no projeto. O verbo HTTP de cada método já indica a natureza da chamada: <code>POST</code> e <code>PATCH</code> enviam dados ao portal, <code>GET</code> consome as filas de retorno, e os endpoints <code>Habilitar*</code> recolocam na fila um documento já consumido, sem transportar conteúdo (seção 13).</p>
 
   <div class="tw">
     <table>
       <caption>4.1 — Dados mestres</caption>
-      <thead><tr><th>#</th><th>Entidade</th><th>Método</th><th>Gatilho</th><th>Periodicidade</th></tr></thead>
+      <thead><tr><th>#</th><th>Entidade</th><th>Método</th><th>Gatilho</th></tr></thead>
       <tbody>
-        <tr><td class="id">01</td><td>Empresas compradoras</td><td><code>POST /api/v1.0/Empresas</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">02</td><td>Empresas fornecedoras</td><td><code>POST /api/v1.0/Empresas</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">03</td><td>Usuários cliente</td><td><code>POST /api/v1.0/Usuarios</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">04</td><td>Categorias de produto</td><td><code>POST /api/v1.0/Categorias</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">05</td><td>Empresa × Categoria</td><td><code>POST /api/v1.0/EmpresasCategorias</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">06</td><td>Unidades de medida</td><td><code>POST /api/v1.0/UnidadesMedidas</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">07</td><td>Itens (produto / serviço)</td><td><code>POST /api/v1.0/Produtos</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">08</td><td>Condições de pagamento</td><td><code>POST /api/v1.0/CondicoesPagamentos</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">09</td><td>Moedas</td><td><code>POST /api/v1.0/Moedas</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">10</td><td>Cotação de moeda (câmbio)</td><td><code>POST /api/v1.0/MoedasCotacoes</code></td><td>Agendado</td><td>Diária</td></tr>
-        <tr><td class="id">11</td><td>Centros de custo</td><td><code>POST /api/v1.0/CentrosCustos</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">12</td><td>Contas contábeis</td><td><code>POST /api/v1.0/ContasContabeis</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
-        <tr><td class="id">13</td><td>Projetos</td><td><code>POST /api/v1.0/Projetos</code></td><td>Evento + carga inicial</td><td>Imediato</td></tr>
+        <tr><td class="id">01</td><td>Empresas compradoras</td><td><code>POST /api/v1.0/Empresas</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">02</td><td>Empresas fornecedoras</td><td><code>POST /api/v1.0/Empresas</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">03</td><td>Usuários cliente</td><td><code>POST /api/v1.0/Usuarios</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">04</td><td>Categorias de produto</td><td><code>POST /api/v1.0/Categorias</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">05</td><td>Empresa × Categoria</td><td><code>POST /api/v1.0/EmpresasCategorias</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">06</td><td>Unidades de medida</td><td><code>POST /api/v1.0/UnidadesMedidas</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">07</td><td>Itens (produto / serviço)</td><td><code>POST /api/v1.0/Produtos</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">08</td><td>Condições de pagamento</td><td><code>POST /api/v1.0/CondicoesPagamentos</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">09</td><td>Moedas</td><td><code>POST /api/v1.0/Moedas</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">10</td><td>Cotação de moeda (câmbio)</td><td><code>POST /api/v1.0/MoedasCotacoes</code></td><td>Agendado</td></tr>
+        <tr><td class="id">11</td><td>Centros de custo</td><td><code>POST /api/v1.0/CentrosCustos</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">12</td><td>Contas contábeis</td><td><code>POST /api/v1.0/ContasContabeis</code></td><td>Evento + carga inicial</td></tr>
+        <tr><td class="id">13</td><td>Projetos</td><td><code>POST /api/v1.0/Projetos</code></td><td>Evento + carga inicial</td></tr>
       </tbody>
     </table>
   </div>
@@ -586,92 +584,38 @@ footer p{font-size:12.5px;color:var(--muted);}
   <div class="tw">
     <table>
       <caption>4.2 — Fornecedores, requisições, contratos, pedidos e fiscal</caption>
-      <thead><tr><th>#</th><th>Fluxo</th><th>Método</th><th>Sentido</th><th>Periodicidade</th></tr></thead>
+      <thead><tr><th>#</th><th>Fluxo</th><th>Método</th></tr></thead>
       <tbody>
-        <tr><td class="id">14</td><td>Fornecedor ativado / inativado</td><td><code>GET /api/v1.0/Empresas/AtivadaInativada</code></td><td><span class="dir s">SRM → ERP</span></td><td>30 min</td></tr>
-        <tr><td class="id">15</td><td>Reprocessar retorno de fornecedor</td><td><code>GET /api/v1.0/Empresas/HabilitarRetornarEmpresaAtivadaInativada</code></td><td><span class="dir s">SRM → ERP</span></td><td>Sob demanda</td></tr>
-        <tr><td class="id">16</td><td>Fornecedores sem de/para</td><td><code>GET /api/v1.0/Empresas/SemDePara</code></td><td><span class="dir s">SRM → ERP</span></td><td>Diária</td></tr>
-        <tr><td class="id">17</td><td>Envio de solicitações de compra</td><td><code>POST /api/v1.0/OrdensCompras</code></td><td><span class="dir e">ERP → SRM</span></td><td>Imediato</td></tr>
-        <tr><td class="id">18</td><td>Requisições canceladas</td><td><code>GET /api/v1.0/Requisicoes/Cancelamento</code></td><td><span class="dir s">SRM → ERP</span></td><td>30 min</td></tr>
-        <tr><td class="id">19</td><td>Reprocessar cancelamento de requisição</td><td><code>POST /api/v1.0/Requisicoes/HabilitarRetornarCancelamento</code></td><td><span class="dir s">SRM → ERP</span></td><td>Sob demanda</td></tr>
-        <tr><td class="id">20</td><td>Requisições em negociação</td><td><code>GET /api/v1.0/Requisicoes/Negociacao</code></td><td><span class="dir s">SRM → ERP</span></td><td>30 min</td></tr>
-        <tr><td class="id">21</td><td>Consumo de contrato aprovado</td><td><code>GET /api/v1.0/Contratos/Contrato</code></td><td><span class="dir s">SRM → ERP</span></td><td>1 h</td></tr>
-        <tr><td class="id">22</td><td>Reprocessar contrato</td><td><code>POST /api/v1.0/Contratos/HabilitarContrato</code></td><td><span class="dir s">SRM → ERP</span></td><td>Sob demanda</td></tr>
-        <tr><td class="id">23</td><td>Devolver contrato como ativo</td><td><code>PATCH /api/v1.0/Contratos/{nCdContrato}/ContratoAtualizarParcial</code></td><td><span class="dir e">ERP → SRM</span></td><td>Imediato</td></tr>
-        <tr><td class="id">24</td><td>Contrato encerrado</td><td><code>GET /api/v1.0/Contratos/Encerrado</code></td><td><span class="dir s">SRM → ERP</span></td><td>Diária</td></tr>
-        <tr><td class="id">25</td><td>Contrato rescindido</td><td><code>GET /api/v1.0/Contratos/Rescindido</code></td><td><span class="dir s">SRM → ERP</span></td><td>Diária</td></tr>
-        <tr><td class="id">26</td><td>Pedidos em processo de integração</td><td><code>GET /api/v1.0/Pedidos/TodosEmProcessoDeIntegracao</code></td><td><span class="dir s">SRM → ERP</span></td><td>15 min</td></tr>
-        <tr><td class="id">27</td><td>Reprocessar pedido</td><td><code>PUT /api/v1.0/Pedidos/HabilitarRetornarPedidoEmProcessoDeIntegracao</code></td><td><span class="dir s">SRM → ERP</span></td><td>Sob demanda</td></tr>
-        <tr><td class="id">28</td><td>Atualizar situação do pedido</td><td><code>PATCH /api/v1.0/Pedidos/{nCdPedido}/PedidoAtualizarParcial</code></td><td><span class="dir e">ERP → SRM</span></td><td>Imediato</td></tr>
-        <tr><td class="id">29</td><td>Pedido cancelado pelo fornecedor</td><td><code>GET /api/v1.0/Pedidos/Cancelamento</code></td><td><span class="dir s">SRM → ERP</span></td><td>30 min</td></tr>
-        <tr><td class="id">30</td><td>Reprocessar cancelamento de pedido</td><td><code>POST /api/v1.0/Pedidos/HabilitarRetornarCancelamento</code></td><td><span class="dir s">SRM → ERP</span></td><td>Sob demanda</td></tr>
-        <tr><td class="id">31</td><td>Títulos financeiros</td><td><code>POST /api/v1.0/Titulos</code></td><td><span class="dir e">ERP → SRM</span></td><td>Diária</td></tr>
-        <tr><td class="id">32</td><td>Espelho de nota fiscal</td><td><code>POST /api/v1.0/NotasFiscais</code></td><td><span class="dir e">ERP → SRM</span></td><td>Imediato</td></tr>
+        <tr><td class="id">14</td><td>Fornecedor ativado / inativado</td><td><code>GET /api/v1.0/Empresas/AtivadaInativada</code></td></tr>
+        <tr><td class="id">15</td><td>Reprocessar retorno de fornecedor</td><td><code>GET /api/v1.0/Empresas/HabilitarRetornarEmpresaAtivadaInativada</code></td></tr>
+        <tr><td class="id">16</td><td>Fornecedores sem de/para</td><td><code>GET /api/v1.0/Empresas/SemDePara</code></td></tr>
+        <tr><td class="id">17</td><td>Envio de solicitações de compra</td><td><code>POST /api/v1.0/OrdensCompras</code></td></tr>
+        <tr><td class="id">18</td><td>Requisições canceladas</td><td><code>GET /api/v1.0/Requisicoes/Cancelamento</code></td></tr>
+        <tr><td class="id">19</td><td>Reprocessar cancelamento de requisição</td><td><code>POST /api/v1.0/Requisicoes/HabilitarRetornarCancelamento</code></td></tr>
+        <tr><td class="id">20</td><td>Requisições em negociação</td><td><code>GET /api/v1.0/Requisicoes/Negociacao</code></td></tr>
+        <tr><td class="id">21</td><td>Consumo de contrato aprovado</td><td><code>GET /api/v1.0/Contratos/Contrato</code></td></tr>
+        <tr><td class="id">22</td><td>Reprocessar contrato</td><td><code>POST /api/v1.0/Contratos/HabilitarContrato</code></td></tr>
+        <tr><td class="id">23</td><td>Devolver contrato como ativo</td><td><code>PATCH /api/v1.0/Contratos/{nCdContrato}/ContratoAtualizarParcial</code></td></tr>
+        <tr><td class="id">24</td><td>Contrato encerrado</td><td><code>GET /api/v1.0/Contratos/Encerrado</code></td></tr>
+        <tr><td class="id">25</td><td>Contrato rescindido</td><td><code>GET /api/v1.0/Contratos/Rescindido</code></td></tr>
+        <tr><td class="id">26</td><td>Pedidos em processo de integração</td><td><code>GET /api/v1.0/Pedidos/TodosEmProcessoDeIntegracao</code></td></tr>
+        <tr><td class="id">27</td><td>Reprocessar pedido</td><td><code>PUT /api/v1.0/Pedidos/HabilitarRetornarPedidoEmProcessoDeIntegracao</code></td></tr>
+        <tr><td class="id">28</td><td>Atualizar situação do pedido</td><td><code>PATCH /api/v1.0/Pedidos/{nCdPedido}/PedidoAtualizarParcial</code></td></tr>
+        <tr><td class="id">29</td><td>Pedido cancelado pelo fornecedor</td><td><code>GET /api/v1.0/Pedidos/Cancelamento</code></td></tr>
+        <tr><td class="id">30</td><td>Reprocessar cancelamento de pedido</td><td><code>POST /api/v1.0/Pedidos/HabilitarRetornarCancelamento</code></td></tr>
+        <tr><td class="id">31</td><td>Títulos financeiros</td><td><code>POST /api/v1.0/Titulos</code></td></tr>
+        <tr><td class="id">32</td><td>Espelho de nota fiscal</td><td><code>POST /api/v1.0/NotasFiscais</code></td></tr>
       </tbody>
     </table>
-  </div>
-
-  <div class="note pend">
-    <span class="tag">Pendência P-03</span>
-    <p>As periodicidades acima são <strong>sugestões</strong> baseadas na criticidade de cada fluxo. Devem ser validadas pela Bernoulli contra a volumetria real e a janela operacional disponível.</p>
   </div>
 </section>
 
 <!-- ============ 5 ============ -->
 <section id="s5">
-  <h2><span class="sn">05</span><span>Parâmetros de configuração</span></h2>
+  <h2><span class="sn">05</span><span>Cadastros mestres</span></h2>
   <div class="rule"></div>
 
-  <h3>Conexão</h3>
-  <p>URL base do ambiente, credencial de acesso, <em>timeout</em> de requisição, número de tentativas de <em>retry</em> e intervalo entre tentativas — todos obrigatórios.</p>
-
-  <h3>Parâmetros de negócio no RM</h3>
-  <div class="tw">
-    <table>
-      <thead><tr><th>Parâmetro</th><th>Descrição</th></tr></thead>
-      <tbody>
-        <tr><td>Coligada padrão</td><td>Coligada de referência para os documentos integrados</td></tr>
-        <tr><td>Regra de coligada global</td><td>Buscar o registro na coligada informada e, não encontrando, na coligada global (0)</td></tr>
-        <tr><td>Tipo de movimento por origem</td><td>Tipo de movimento RM (<code>TTMV</code>) para cada uma das seis origens de pedido</td></tr>
-        <tr><td>Movimento de solicitação de compra</td><td>Na configuração atual: <code>1.1.02</code></td></tr>
-        <tr><td>Movimento de ordem de compra</td><td>Na configuração atual: <code>1.1.04</code></td></tr>
-        <tr><td>Transportadora genérica</td><td>Cadastro usado quando o portal não informa transportadora</td></tr>
-        <tr><td>De/para de situações</td><td>Correspondência entre situações do portal e status do RM</td></tr>
-        <tr><td>De/para de taxas</td><td>Correspondência entre <code>nCdTaxa</code> do portal e <code>CODTRB</code> do RM</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3>Regra de resolução em coligada</h3>
-  <p>Regra de resolução aplicada a todo campo com identificação de coligada:</p>
-  <div class="note">
-    <p>Para todo campo que o portal enviar com identificação de coligada — cliente, produto, filial, centro de custo e demais — a identificação no TOTVS ocorre <strong>primeiro na coligada retornada</strong> e, caso não encontrada, verifica-se a existência na <strong>coligada global (0)</strong>.</p>
-  </div>
-
-  <div class="tw">
-    <table>
-      <thead><tr><th>Campo retornado</th><th>Resolução</th></tr></thead>
-      <tbody>
-        <tr><td><code>Produto = "2|0000123"</code></td><td>Verifica o produto na coligada 2; não existindo, verifica <code>0000123</code> na coligada 0</td></tr>
-        <tr><td><code>Fornecedor = "FO|0|0000039020"</code></td><td>Verifica o cliente/fornecedor apenas na coligada 0 (global)</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="note warn">
-    <span class="tag">Consequência</span>
-    <p>Não localizando a referência, o documento <strong>não é integrado</strong> e um log é gravado. Não há integração parcial — ver seção 14.</p>
-  </div>
-
-  <p>Os parâmetros de negócio são gravados <strong>por coligada</strong>, em tabela própria da camada de integração.</p>
-</section>
-
-<!-- ============ 6 ============ -->
-<section id="s6">
-  <h2><span class="sn">06</span><span>Cadastros mestres</span></h2>
-  <div class="rule"></div>
-
-  <p>O ERP gerencia os dados mestres transacionados na plataforma. As informações partem do ERP e são enviadas ao SRM 360. A única exceção é o cadastro de fornecedores, com fluxo bidirecional (seção 07).</p>
+  <p>O ERP gerencia os dados mestres transacionados na plataforma. As informações partem do ERP e são enviadas ao SRM 360. A única exceção é o cadastro de fornecedores, com fluxo bidirecional (seção 06).</p>
 
   <h3>Modos de sincronização</h3>
   <p>A <strong>carga inicial</strong> envia em lote os registros ativos, na implantação. O <strong>gatilho de alteração</strong> mantém a sincronia na operação corrente, a cada inclusão ou alteração no ERP.</p>
@@ -691,7 +635,7 @@ footer p{font-size:12.5px;color:var(--muted);}
       <thead><tr><th>Entidade</th><th>Chave no ERP</th><th>Observações</th></tr></thead>
       <tbody>
         <tr><td>Empresas compradoras</td><td>Coligada + Filial</td><td>Concatenar código + descrição</td></tr>
-        <tr><td>Empresas fornecedoras</td><td>Coligada + CODCFO</td><td>Mesmo endpoint das compradoras; fluxo bidirecional na seção 07</td></tr>
+        <tr><td>Empresas fornecedoras</td><td>Coligada + CODCFO</td><td>Mesmo endpoint das compradoras; fluxo bidirecional na seção 06</td></tr>
         <tr><td>Usuários</td><td>Código do usuário</td><td><strong>Não são integrados todos</strong> — a Bernoulli indica quais, via carga inicial</td></tr>
         <tr><td>Categorias de produto</td><td>Código da tabela de classificação</td><td>Corresponde à Classificação de Produto do RM; <strong>obrigatório</strong> para integrar produtos</td></tr>
         <tr><td>Empresa × Categoria</td><td>Fornecedor + Categoria</td><td>Vínculo obrigatório para selecionar o fornecedor em cotação. Ausente no ERP, deve ser complementado no portal</td></tr>
@@ -712,15 +656,20 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 </section>
 
-<!-- ============ 7 ============ -->
-<section id="s7">
-  <h2><span class="sn">07</span><span>Homologação de fornecedores</span></h2>
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <h2><span class="sn">06</span><span>Homologação de fornecedores</span></h2>
   <div class="rule"></div>
 
   <p>Este é o <strong>único fluxo de cadastro com sentido duplo</strong>. O cadastro ocorre na plataforma, mas a base inicial e o registro definitivo vivem no ERP.</p>
 
   <h3>Operações no portal</h3>
   <p>Três tipos de operação — <strong>novo cadastro</strong>, <strong>alteração cadastral</strong> e <strong>renovação cadastral</strong>. Em todos, o fornecedor informa dados e documentos, recebe protocolo de acompanhamento e o processo entra em fila de análise.</p>
+
+  <div class="note warn">
+    <span class="tag">Dependência de sequência</span>
+    <p>As <strong>categorias/linhas de fornecimento</strong> oferecidas ao fornecedor durante o cadastro são as <strong>categorias de produto integradas do ERP</strong> (seção 05). A carga de categorias precisa estar concluída antes da abertura do processo de homologação, sob pena de o fornecedor não conseguir se classificar corretamente. Os documentos exigidos, por sua vez, são definidos pela Bernoulli em tempo de projeto e não envolvem integração.</p>
+  </div>
 
   <div class="tw">
     <table>
@@ -740,7 +689,7 @@ footer p{font-size:12.5px;color:var(--muted);}
 
   <h3>Ação esperada no ERP</h3>
   <ol>
-    <li>Verificar a existência do fornecedor no RM pelo CNPJ/CPF, aplicando a regra de coligada.</li>
+    <li>Verificar a existência do fornecedor no RM pelo CNPJ/CPF, buscando primeiro na coligada informada e, não encontrando, na coligada global (0).</li>
     <li><strong>Não existindo:</strong> criar o cadastro de Cliente/Fornecedor com os dados retornados.</li>
     <li><strong>Existindo:</strong> atualizar os dados alterados e reativar o cadastro se estiver inativo.</li>
     <li>Registrar o de/para entre o identificador do portal e <code>CODCOLIGADA|CODCFO</code>.</li>
@@ -755,9 +704,9 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 </section>
 
-<!-- ============ 8 ============ -->
-<section id="s8">
-  <h2><span class="sn">08</span><span>Solicitação de compra</span></h2>
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <h2><span class="sn">07</span><span>Solicitação de compra</span></h2>
   <div class="rule"></div>
 
   <p>A solicitação de compra é criada no RM, passa por aprovação e check orçamentário, e só então é disponibilizada ao portal.</p>
@@ -788,9 +737,9 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 </section>
 
-<!-- ============ 9 ============ -->
-<section id="s9">
-  <h2><span class="sn">09</span><span>Contratos</span></h2>
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <h2><span class="sn">08</span><span>Contratos</span></h2>
   <div class="rule"></div>
 
   <p>O ciclo de vida do contrato tem uma característica que merece destaque: <strong>a vigência no portal não começa na aprovação, mas no retorno do ERP</strong>.</p>
@@ -858,7 +807,7 @@ footer p{font-size:12.5px;color:var(--muted);}
       <thead><tr><th>Fluxo</th><th>Método</th><th>Sentido</th></tr></thead>
       <tbody>
         <tr><td>Consumo do contrato aprovado</td><td><code>GET /api/v1.0/Contratos/Contrato</code></td><td><span class="dir s">SRM → ERP</span></td></tr>
-        <tr><td>Reprocessar um contrato</td><td><code>POST /api/v1.0/Contratos/HabilitarContrato</code></td><td><span class="dir s">SRM → ERP</span></td></tr>
+        <tr><td>Reprocessar um contrato</td><td><code>POST /api/v1.0/Contratos/HabilitarContrato</code></td><td><span class="dir r">REPROCESSAMENTO</span></td></tr>
         <tr><td>Devolver situação “ativo”</td><td><code>PATCH /api/v1.0/Contratos/{nCdContrato}/ContratoAtualizarParcial</code></td><td><span class="dir e">ERP → SRM</span></td></tr>
         <tr><td>Contrato encerrado</td><td><code>GET /api/v1.0/Contratos/Encerrado</code></td><td><span class="dir s">SRM → ERP</span></td></tr>
         <tr><td>Contrato rescindido</td><td><code>GET /api/v1.0/Contratos/Rescindido</code></td><td><span class="dir s">SRM → ERP</span></td></tr>
@@ -884,18 +833,18 @@ footer p{font-size:12.5px;color:var(--muted);}
   <p><strong>Entrega programada:</strong> o contrato precisa estar em configuração para definir a programação, que admite dia fixo do mês ou dias corridos, com opção de pular finais de semana.</p>
 </section>
 
-<!-- ============ 10 ============ -->
-<section id="s10">
-  <h2><span class="sn">10</span><span>Catálogo</span></h2>
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <h2><span class="sn">09</span><span>Catálogo</span></h2>
   <div class="rule"></div>
 
   <p><strong>O catálogo não é integrado com o ERP.</strong> A configuração, aprovação, vigência e consumo — loja virtual, carrinho, fechamento — ocorrem integralmente na plataforma SRM 360.</p>
-  <p>A integração começa apenas quando o fechamento do carrinho <strong>gera um pedido de compra</strong>, que segue o fluxo da seção 11. A característica relevante para o ERP: pedidos de catálogo <strong>não possuem item de requisição associado</strong> e, portanto, passam obrigatoriamente pela validação orçamentária no RM.</p>
+  <p>A integração começa apenas quando o fechamento do carrinho <strong>gera um pedido de compra</strong>, que segue o fluxo da seção 10. A característica relevante para o ERP: pedidos de catálogo <strong>não possuem item de requisição associado</strong> e, portanto, passam obrigatoriamente pela validação orçamentária no RM.</p>
 </section>
 
-<!-- ============ 11 ============ -->
-<section id="s11">
-  <h2><span class="sn">11</span><span>Pedido de compra</span></h2>
+<!-- ============ 10 ============ -->
+<section id="s10">
+  <h2><span class="sn">10</span><span>Pedido de compra</span></h2>
   <div class="rule"></div>
 
   <p class="lead">Este é o fluxo central da integração. O pedido é sempre gerado na plataforma SRM 360, com número interno próprio, a partir de seis origens distintas.</p>
@@ -1032,9 +981,9 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 </section>
 
-<!-- ============ 12 ============ -->
-<section id="s12">
-  <h2><span class="sn">12</span><span>Títulos e notas fiscais</span></h2>
+<!-- ============ 11 ============ -->
+<section id="s11">
+  <h2><span class="sn">11</span><span>Títulos e notas fiscais</span></h2>
   <div class="rule"></div>
 
   <h3>Títulos financeiros — <code>POST /api/v1.0/Titulos</code></h3>
@@ -1051,9 +1000,9 @@ footer p{font-size:12.5px;color:var(--muted);}
   <p>O gatilho é o lançamento da nota fiscal no ERP — o mesmo evento que atualiza a situação de recebimento do pedido. Recomenda-se que ambas as chamadas sejam executadas na mesma transação lógica, para evitar divergência entre a situação do pedido e a existência do espelho no portal.</p>
 </section>
 
-<!-- ============ 13 ============ -->
-<section id="s13">
-  <h2><span class="sn">13</span><span>Mapeamento de campos</span></h2>
+<!-- ============ 12 ============ -->
+<section id="s12">
+  <h2><span class="sn">12</span><span>Mapeamento de campos</span></h2>
   <div class="rule"></div>
 
   <p>O mapeamento relaciona os elementos do documento no portal às tabelas e colunas correspondentes do TOTVS RM.</p>
@@ -1117,7 +1066,7 @@ footer p{font-size:12.5px;color:var(--muted);}
 
   <div class="note warn">
     <span class="tag">Ponto de atenção crítico — P-09</span>
-    <p>No escopo deste projeto — com recebimento parcial <em>por item</em>, medição de contrato e reconfiguração de item — <strong>a ausência de vínculo item-a-item entre portal e ERP pode inviabilizar a atualização de situação por item</strong>, exigida na seção 11. Este ponto precisa ser reavaliado tecnicamente antes do desenvolvimento.</p>
+    <p>No escopo deste projeto — com recebimento parcial <em>por item</em>, medição de contrato e reconfiguração de item — <strong>a ausência de vínculo item-a-item entre portal e ERP pode inviabilizar a atualização de situação por item</strong>, exigida na seção 10. Este ponto precisa ser reavaliado tecnicamente antes do desenvolvimento.</p>
   </div>
 
   <div class="tw">
@@ -1155,9 +1104,9 @@ footer p{font-size:12.5px;color:var(--muted);}
   <p>O mapeamento campo a campo das demais entidades — cadastros mestres, solicitação de compra, contrato, título financeiro e nota fiscal — será detalhado após a entrega da documentação de contratos da API REST, no mesmo formato tabular.</p>
 </section>
 
-<!-- ============ 14 ============ -->
-<section id="s14">
-  <h2><span class="sn">14</span><span>Erros e reprocessamento</span></h2>
+<!-- ============ 13 ============ -->
+<section id="s13">
+  <h2><span class="sn">13</span><span>Erros e reprocessamento</span></h2>
   <div class="rule"></div>
 
   <h3>Mecanismo oficial de reprocessamento</h3>
@@ -1206,7 +1155,7 @@ footer p{font-size:12.5px;color:var(--muted);}
       <caption>Cenários de indisponibilidade</caption>
       <thead><tr><th>Cenário</th><th>Comportamento esperado</th></tr></thead>
       <tbody>
-        <tr><td>API indisponível no envio</td><td>Retentativa conforme parâmetros; persistindo, enfileirar localmente e alertar</td></tr>
+        <tr><td>API indisponível no envio</td><td>Retentativa conforme a política de <em>retry</em> da camada de integração; persistindo, enfileirar localmente e alertar</td></tr>
         <tr><td>API indisponível no consumo</td><td>Nenhum documento é perdido — a fila permanece no portal</td></tr>
         <tr><td>ERP indisponível após consumo</td><td>Repor documento na fila via endpoint <code>Habilitar*</code></td></tr>
         <tr><td>Falha parcial em lote de cadastros</td><td>Registrar por registro; não abortar o lote inteiro</td></tr>
@@ -1215,9 +1164,9 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 </section>
 
-<!-- ============ 15 ============ -->
-<section id="s15">
-  <h2><span class="sn">15</span><span>Pendências</span></h2>
+<!-- ============ 14 ============ -->
+<section id="s14">
+  <h2><span class="sn">14</span><span>Pendências</span></h2>
   <div class="rule"></div>
 
   <p>Consolidação dos pontos que dependem de definição antes ou durante o desenvolvimento. Este é o checklist de resposta esperado da Bernoulli e da Paradigma.</p>
@@ -1228,14 +1177,14 @@ footer p{font-size:12.5px;color:var(--muted);}
       <tbody>
         <tr><td class="id">P-01</td><td>Responsável técnico pela camada de integração do lado RM</td><td>Bernoulli</td><td>Início do desenvolvimento</td></tr>
         <tr><td class="id">P-02</td><td>URLs dos ambientes, autenticação, política de credencial, rate limit e paginação</td><td>Paradigma</td><td>Desenvolvimento</td></tr>
-        <tr><td class="id">P-03</td><td>Validação das periodicidades sugeridas contra volumetria real e janela operacional</td><td>Bernoulli</td><td>Configuração</td></tr>
+        <tr><td class="id">P-03</td><td>Definição das janelas de execução de cada fluxo, conforme volumetria real e janela operacional</td><td>Bernoulli</td><td>Configuração</td></tr>
         <tr><td class="id">P-04</td><td>Formato exato da concatenação “código + descrição” e comportamento na alteração da descrição</td><td>Paradigma</td><td>Cadastros</td></tr>
-        <tr><td class="id">P-05</td><td>Campos retornados no fluxo de fornecedor homologado e suficiência para criar cadastro no RM</td><td>Paradigma + Bernoulli</td><td>Seção 07</td></tr>
-        <tr><td class="id">P-06</td><td>Identificação automática do pedido do tipo “regularização” no payload</td><td>Paradigma</td><td>Seção 08</td></tr>
-        <tr><td class="id">P-07</td><td>Situações de título financeiro a publicar e campo de vínculo título ↔ pedido</td><td>Bernoulli + Paradigma</td><td>Seção 12</td></tr>
-        <tr><td class="id">P-08</td><td><strong>Entrega da documentação de contratos da API REST</strong> (payloads de request e response de todos os endpoints)</td><td>Paradigma</td><td><strong>Seção 13</strong></td></tr>
-        <tr><td class="id">P-09</td><td><strong>Rastreabilidade item a item</strong> entre portal e ERP, diante do recebimento parcial por item, medição e reconfiguração</td><td>Paradigma + Bernoulli</td><td><strong>Seção 11</strong></td></tr>
-        <tr><td class="id">P-10</td><td>Tabela de de/para de situações de pedido entre portal e RM</td><td>Bernoulli</td><td>Seção 11</td></tr>
+        <tr><td class="id">P-05</td><td>Campos retornados no fluxo de fornecedor homologado e suficiência para criar cadastro no RM</td><td>Paradigma + Bernoulli</td><td>Seção 06</td></tr>
+        <tr><td class="id">P-06</td><td>Identificação automática do pedido do tipo “regularização” no payload</td><td>Paradigma</td><td>Seção 07</td></tr>
+        <tr><td class="id">P-07</td><td>Situações de título financeiro a publicar e campo de vínculo título ↔ pedido</td><td>Bernoulli + Paradigma</td><td>Seção 11</td></tr>
+        <tr><td class="id">P-08</td><td><strong>Entrega da documentação de contratos da API REST</strong> (payloads de request e response de todos os endpoints)</td><td>Paradigma</td><td><strong>Seção 12</strong></td></tr>
+        <tr><td class="id">P-09</td><td><strong>Rastreabilidade item a item</strong> entre portal e ERP, diante do recebimento parcial por item, medição e reconfiguração</td><td>Paradigma + Bernoulli</td><td><strong>Seção 10</strong></td></tr>
+        <tr><td class="id">P-10</td><td>Tabela de de/para de situações de pedido entre portal e RM</td><td>Bernoulli</td><td>Seção 10</td></tr>
         <tr><td class="id">P-11</td><td>Confirmação da versão do TOTVS RM em produção</td><td>Bernoulli</td><td>Desenvolvimento</td></tr>
         <tr><td class="id">P-12</td><td>Lista de usuários e de condições de pagamento a integrar (carga inicial seletiva)</td><td>Bernoulli</td><td>Cadastros</td></tr>
         <tr><td class="id">P-13</td><td>Volumetria estimada por entidade, para dimensionamento</td><td>Bernoulli</td><td>Configuração</td></tr>
@@ -1244,9 +1193,9 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 </section>
 
-<!-- ============ 16 ============ -->
-<section id="s16">
-  <h2><span class="sn">16</span><span>Plano de testes</span></h2>
+<!-- ============ 15 ============ -->
+<section id="s15">
+  <h2><span class="sn">15</span><span>Plano de testes</span></h2>
   <div class="rule"></div>
 
   <div class="tw">
@@ -1330,9 +1279,9 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 </section>
 
-<!-- ============ 17 ============ -->
-<section id="s17">
-  <h2><span class="sn">17</span><span>Glossário de equivalência</span></h2>
+<!-- ============ 16 ============ -->
+<section id="s16">
+  <h2><span class="sn">16</span><span>Glossário de equivalência</span></h2>
   <div class="rule"></div>
 
   <div class="tw">
@@ -1356,9 +1305,9 @@ footer p{font-size:12.5px;color:var(--muted);}
   </div>
 </section>
 
-<!-- ============ 18 ============ -->
-<section id="s18">
-  <h2><span class="sn">18</span><span>Histórico e aprovação</span></h2>
+<!-- ============ 17 ============ -->
+<section id="s17">
+  <h2><span class="sn">17</span><span>Histórico e aprovação</span></h2>
   <div class="rule"></div>
 
   <div class="tw">

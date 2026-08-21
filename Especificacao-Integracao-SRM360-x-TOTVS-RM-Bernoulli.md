@@ -417,6 +417,9 @@ Em configuração ──> Aprovação (alçada padrão) ──> Disponível para
                                                             │
                                              GET /Contratos/Contrato
                                                             ▼
+                                                  Camada de integração
+                                                            │
+                                                            ▼
                                                     Registrado no RM
                                                             │
                                         minuta + coleta de assinaturas (ERP)
@@ -428,6 +431,13 @@ Em configuração ──> Aprovação (alçada padrão) ──> Disponível para
                                        ┌────────────────────┴──────────────┐
                                        ▼                                   ▼
                           GET /Contratos/Encerrado            GET /Contratos/Rescindido
+                                       └─────────────────┬─────────────────┘
+                                                         ▼
+                                               Camada de integração
+                                                         │
+                                        baixa / encerramento do contrato
+                                                         ▼
+                                                     TOTVS RM
 ```
 
 ### 10.2. Regras
